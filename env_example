@@ -1,0 +1,3 @@
+STRIPE_SECRET_KEY=sk_test_etc
+STRIPE_WEBHOOK_SECRET=whsec__etc
+DOMAIN_URL=http://127.0.0.1:4242
