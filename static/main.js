@@ -36,9 +36,6 @@ on("click", "button#signup", (e) => {
 });
 on("submit", "form#signup", async (e) => {
   e.preventDefault();
-  console.log(e.match);
-  let formData = new FormData(e.match);
-  console.log(JSON.stringify(Object.fromEntries(formData)));
   let response = await fetch("/signup", {
     method: "POST",
     body: new FormData(e.match),
