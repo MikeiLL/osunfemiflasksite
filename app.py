@@ -16,7 +16,8 @@ import json
 import os
 import stripe
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from payment import payment
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,8 +29,8 @@ stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 endpoint_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
 
 app = Flask(__name__)
-
-@app.route('/webhook', methods=['POST'])
+app.register_blueprint(payment, url_prefix="/payment")
+""" @app.route('/webhook', methods=['POST'])
 def webhook():
     event = None
     payload = request.data
@@ -53,7 +54,11 @@ def webhook():
     else:
       print('Unhandled event type {}'.format(event['type']))
 
-    return jsonify(success=True)
+    return jsonify(success=True) """
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
 if __name__ == "__main__":
 	# # If we're running with gunicorn, we need to start the websocket server

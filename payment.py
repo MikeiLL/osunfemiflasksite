@@ -23,6 +23,7 @@ stripe.api_key = stripe_keys["secret_key"]
 @payment.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     data = request.json
+    CHECKOUT_SESSION_ID = 1 #mike test account
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
@@ -126,5 +127,5 @@ stripe.billing_portal.Configuration.create(
         "customer_update": {"enabled": True, "allowed_updates": ["address", "name"]},
         # Add other features as needed
     },
-    default_return_url="<http://127.0.0.1:4242/>",
+    default_return_url="http://127.0.0.1:4242/",
 )

@@ -6,6 +6,6 @@ https://github.com/duplxey/flask-stripe-subscriptions/blob/master/app.py
 # Test Webhooks with the cli
 `brew install stripe/stripe-cli/stripe` (OSX)
  - `stripe login`
- - `stripe listen --forward-to localhost:4242/webhook`
+ - `stripe listen --forward-to localhost:4242/payments/webhook`
  - `stripe trigger payment_intent.succeeded`
  - `python -m flask run --port=4242`

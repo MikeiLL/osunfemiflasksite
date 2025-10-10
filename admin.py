@@ -54,7 +54,7 @@ def hello_world():
 	return "Hello, World! This is a test from commandline!"
 
 @cmdline
-def create_user(displayname, email, password, store_id):
+def create_user(displayname, email, password):
 	"""Create a new user, return the newly-created ID
 
 	username: Name for the new user
@@ -67,8 +67,8 @@ def create_user(displayname, email, password, store_id):
 	with _conn, _conn.cursor() as cur:
 		pwd = utils.hash_password(password)
 		try:
-			cur.execute("INSERT INTO users (displayname, email, password, store_id) VALUES (%s, %s, %s, %s) RETURNING id", \
-											(displayname, email, pwd, store_id))
+			cur.execute("INSERT INTO users (displayname, email, password) VALUES (%s, %s, %s) RETURNING id", \
+											(displayname, email, pwd))
 			return cur.fetchone()
 		except psycopg2.IntegrityError as e:
 			return "That didn't work too well because: %s Maybe you already have an account or \
