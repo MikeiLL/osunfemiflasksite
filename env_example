@@ -2,3 +2,4 @@ STRIPE_SECRET_KEY=sk_test_etc
 STRIPE_WEBHOOK_SECRET=whsec__etc
 DOMAIN_URL=http://127.0.0.1:4242
 DATABASE_URL="dbname=somedatabase user=someuser"
+SECRET_KEY="decathlon sedate astrology riptide freewill anteate"
