@@ -48,7 +48,7 @@ app.register_blueprint(payment, url_prefix="/payment")
 
 @app.route("/")
 def index():
-    products = stripe.Product.list()
+    products = [p for p in stripe.Product.list() if p['active']]
     prices = {p["product"]: p for p in stripe.Price.list()}
     # mutate the product to add the price
     for p in products:
