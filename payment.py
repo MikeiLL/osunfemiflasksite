@@ -52,7 +52,12 @@ def stripe_webhook():
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
         return "Invalid signature", 400
-
+    """     from datetime import datetime
+    with open("event_data_objects", "a") as f:
+        print(datetime.now(), file=f)
+        print('', file=f)
+        print(event['type'], file=f)
+        print(event['data'], file=f) """
   # There are alot of event types you can listen for and I have listed all of them below
     if event['type'] == 'checkout.session.async_payment_failed':
         session = event['data']['object']
