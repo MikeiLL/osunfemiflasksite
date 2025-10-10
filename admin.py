@@ -24,7 +24,7 @@ def cmdline(f):
 @dataclass
 class User(UserMixin):
 	id: int
-	displayname: str
+	fullname: str
 	ifaorishaname: str
 	email: str
 	user_level: int
@@ -59,7 +59,7 @@ def hello_world():
 	return "Hello, World! This is a test from commandline!"
 
 @cmdline
-def create_user(displayname, email, password, ifaorishaname=''):
+def create_user(fullname, email, password, ifaorishaname=''):
 	"""Create a new user, return the newly-created ID
 
 	username: Name for the new user
@@ -69,7 +69,7 @@ def create_user(displayname, email, password, ifaorishaname=''):
 	password: Clear-text password
 	"""
 	email = email.lower()
-	stripename = "%s (%s)" % (displayname, ifaorishaname) if ifaorishaname else displayname
+	stripename = "%s (%s)" % (fullname, ifaorishaname) if ifaorishaname else fullname
 	try:
 		stripe_customer = stripe.Customer.create(
 				name=stripename,
@@ -80,13 +80,17 @@ def create_user(displayname, email, password, ifaorishaname=''):
 	with _conn, _conn.cursor() as cur:
 		pwd = utils.hash_password(password)
 		try:
-			cur.execute("INSERT INTO users (displayname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
-											(displayname, email, pwd, ifaorishaname, stripe_customer.id))
+			cur.execute("INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
+											(fullname, email, pwd, ifaorishaname, stripe_customer.id))
 			return cur.fetchone()
 		except psycopg2.IntegrityError as e:
 			stripe.Customer.delete(stripe_customer.id)
-			return json.dumps({"error":"That didn't work too well because: %s Maybe you already have an account or \
-					someone else is using the name you requested."%e})
+			return json.dumps({
+				"error":"Something went wrong.",
+				"message": str(e),
+				"description": "Maybe you already have an account under this email."
+			})
+	return json.dumps({'success': "New Account Created"})
 
 @cmdline
 def set_user_password(email, password):

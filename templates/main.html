@@ -37,8 +37,8 @@
       </nav>
     </div>
     <div class="user">
-      {% if user.displayname %}
-      Logged in as {{ user.displayname }} <a class="btn" href="/logout">Logout</a>
+      {% if user.fullname %}
+      Logged in as {{ user.fullname }} <a class="btn" href="/logout">Logout</a>
       {% else %}
       Not logged in
       {% endif %}

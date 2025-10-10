@@ -67,11 +67,13 @@ def logout():
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    data = request.form
-    print(data)
-    return jsonify({'hello': "world"})
-    user = admin.create_user()
-    return jsonify({'hello': "world"})
+    user = admin.create_user(
+        request.form['fullname'],
+        request.form["email"],
+        request.form["password"],
+        request.form['orishaname'],
+    )
+    return json.dumps(user)
 
 @app.route("/login", methods=["POST"])
 def login_post():
