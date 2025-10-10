@@ -33,10 +33,10 @@ def create_checkout_session():
             mode="subscription",
             line_items=[{"price": data["price_id"], "quantity": 1}],
             success_url=f"{domain_url}/success?session_id={current_user.id}",
-            cancel_url=f"{domain_url}/cancel",
+            cancel_url=f"{domain_url}/",
         )
         print(checkout_session)
-        return jsonify({"sessionId": checkout_session.id})
+        return jsonify({"url": checkout_session.url})
     except Exception as e:
         return jsonify(error=str(e)), 403
 

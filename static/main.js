@@ -19,7 +19,7 @@ on("click", ".title", async (e) => {
       }),
     }
   );
-  result = await JSON.parse(resp);
-  console.log(result);
+  let result = await resp.json();
+  window.location = result.url;
   //DOM("dialog#main").showModal();
 });
