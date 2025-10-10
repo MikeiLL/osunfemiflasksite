@@ -42,7 +42,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
-	return admin.User.from_id(int(id))
+    return admin.User.from_id(int(id))
 
 app.register_blueprint(payment, url_prefix="/payment")
 
@@ -58,30 +58,43 @@ def index():
 
 @app.route("/login")
 def login_get():
-	return render_template("login.html", user=current_user)
+    return render_template("login.html", user=current_user)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    data = request.form
+    print(data)
+    return jsonify({'hello': "world"})
+    user = admin.create_user()
+    return jsonify({'hello': "world"})
 
 @app.route("/login", methods=["POST"])
 def login_post():
-	user = admin.User.from_credentials(
-		request.form["email"],
-		request.form["password"]
-	)
-	if user:
-		login_user(user)
-		return redirect('/')
-	else:
-		flash("Invalid email or password")
-		return redirect("/")
+    user = admin.User.from_credentials(
+        request.form["email"],
+        request.form["password"]
+    )
+    if user:
+        login_user(user)
+        return redirect('/')
+    else:
+        flash("Invalid email or password")
+        return redirect("/")
 
 @app.route("/success")
 def success():
     return render_template("success.html")
 
 if __name__ == "__main__":
-	# # If we're running with gunicorn, we need to start the websocket server
-	# # So swap comment on following block with the next one
-	import logging
-	logging.basicConfig(level=logging.INFO)
-	if "PORT" not in os.environ: os.environ["PORT"] = "4242"
+    # # If we're running with gunicorn, we need to start the websocket server
+    # # So swap comment on following block with the next one
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    if "PORT" not in os.environ: os.environ["PORT"] = "4242"
 
-	app.run(debug=True, port=4242)
+    app.run(debug=True, port=4242)

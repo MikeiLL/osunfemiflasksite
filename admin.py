@@ -2,12 +2,16 @@ import psycopg2
 import clize
 import utils
 import os
+import json
 from flask_login import UserMixin
 from dataclasses import dataclass
 from dotenv import load_dotenv
+import stripe
+
+from dotenv import load_dotenv
 
 load_dotenv()
-
+stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 DATABASE_URL = os.environ["DATABASE_URL"]
 
 _conn = psycopg2.connect(DATABASE_URL)
@@ -25,6 +29,7 @@ class User(UserMixin):
 	email: str
 	user_level: int
 	grade_level: int
+	stripe_customer_id: str
 
 	@classmethod
 	def from_id(cls, id, password=None):
@@ -54,7 +59,7 @@ def hello_world():
 	return "Hello, World! This is a test from commandline!"
 
 @cmdline
-def create_user(displayname, email, password):
+def create_user(displayname, email, password, ifaorishaname=''):
 	"""Create a new user, return the newly-created ID
 
 	username: Name for the new user
@@ -64,15 +69,24 @@ def create_user(displayname, email, password):
 	password: Clear-text password
 	"""
 	email = email.lower()
+	stripename = "%s (%s)" % (displayname, ifaorishaname) if ifaorishaname else displayname
+	try:
+		stripe_customer = stripe.Customer.create(
+				name=stripename,
+				email=email,
+		)
+	except stripe.error.InvalidRequestError as e:
+			return json.dumps({'error':str(e)})
 	with _conn, _conn.cursor() as cur:
 		pwd = utils.hash_password(password)
 		try:
-			cur.execute("INSERT INTO users (displayname, email, password) VALUES (%s, %s, %s) RETURNING id", \
-											(displayname, email, pwd))
+			cur.execute("INSERT INTO users (displayname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
+											(displayname, email, pwd, ifaorishaname, stripe_customer.id))
 			return cur.fetchone()
 		except psycopg2.IntegrityError as e:
-			return "That didn't work too well because: %s Maybe you already have an account or \
-					someone else is using the name you requested."%e
+			stripe.Customer.delete(stripe_customer.id)
+			return json.dumps({"error":"That didn't work too well because: %s Maybe you already have an account or \
+					someone else is using the name you requested."%e})
 
 @cmdline
 def set_user_password(email, password):
