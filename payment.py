@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
+from flask_login import LoginManager, current_user, login_user
 import stripe
 import os
 import logging
 from dotenv import load_dotenv
+import admin
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,18 +22,20 @@ domain_url = os.environ["DOMAIN_URL"]
 # See your keys here: <https://dashboard.stripe.com/apikeys>
 stripe.api_key = stripe_keys["secret_key"]
 
+
 @payment.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     data = request.json
-    CHECKOUT_SESSION_ID = 1 #mike test account
+    print(data)
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             mode="subscription",
             line_items=[{"price": data["price_id"], "quantity": 1}],
-            success_url=f"{domain_url}/success?session_id={CHECKOUT_SESSION_ID}",
+            success_url=f"{domain_url}/success?session_id={current_user.id}",
             cancel_url=f"{domain_url}/cancel",
         )
+        print(checkout_session)
         return jsonify({"sessionId": checkout_session.id})
     except Exception as e:
         return jsonify(error=str(e)), 403

@@ -6,6 +6,9 @@
     <h2>{{ item.name }}</h2>{{ item.description }}
     <img src="{{ item.images[0] }}" alt="{{ item.name }}">
     <p>${{item.price['unit_amount'] // 100}} per {{item.price['recurring']['interval']}}</p>
+    <button class=title id="{{item.price['id']}}">
+      Tithe at this level
+    </button>
   </li>
   {% endfor %}
 </ul>

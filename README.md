@@ -100,3 +100,6 @@ Heroku, AWS, Linode???
       "unit_amount_decimal": "500"
     }
     ```
+
+### Stripe
+Test cards: https://docs.stripe.com/testing#cards
