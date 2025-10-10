@@ -4,9 +4,9 @@
 
 users
 	id serial primary key
-	displayname varchar not null unique -- This is also the customer name in Stripe
-  ifaorishaname varchar
-	email varchar not null unique
+	fullname varchar not null -- This is also the base of customer name in Stripe
+  ifaorishaname varchar -- may be appended to Stripe customer name
+	email varchar not null unique  -- This is also the customer name in Stripe
 	password varchar not null default ''
 	user_level int not null default 1 -- noaccess=0, manager=1, admin=3
   grade_level int not null default 1 -- for access to classes
