@@ -17,6 +17,20 @@ def test_get_user_success():
     )
     assert user.email == "test@example.com"
 
+def test_get_user_fail_wrong_pwd():
+    user = admin.User.from_credentials(
+        "test@example.com",
+        "asdfasdfasdfxxx"
+    )
+    assert user == None
+
+def test_get_user_fail_not_found():
+    user = admin.User.from_credentials(
+        "test@example.net",
+        "asdfasdfasdf"
+    )
+    assert user == None
+
 def test_delete_user():
     removed = admin.delete_user(
         "test@example.com",
