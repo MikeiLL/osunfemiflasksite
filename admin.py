@@ -78,7 +78,7 @@ def create_user(fullname, email, password, ifaorishaname=''):
         try:
             cur.execute("INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
                                             (fullname, email, pwd, ifaorishaname, stripe_customer.id))
-            return cur.fetchone()
+            return {'success': "New Account Created"}
         except psycopg2.IntegrityError as e:
             stripe.Customer.delete(stripe_customer.id)
             return json.dumps({
@@ -86,7 +86,6 @@ def create_user(fullname, email, password, ifaorishaname=''):
                 "message": str(e),
                 "description": "Maybe you already have an account under this email."
             })
-    return json.dumps({'success': "New Account Created"})
 
 @cmdline
 def set_user_password(email, password):
@@ -106,7 +105,19 @@ def set_user_password(email, password):
         else:
             cur.execute("update users set password=%s where id=%s", (pwd, rows[0][0]))
 
-
+@cmdline
+def delete_user(email, fullname):
+    """
+    Remove a user by identified by email and fullname
+    """
+    with _conn, _conn.cursor() as cur:
+        cur.execute("DELETE FROM users WHERE email=%s and fullname = %s RETURNING id", (email, fullname,),)
+        rows=cur.fetchall()
+        if not rows:
+            return "No such user"
+        else:
+            print(rows[0])
+            return "User Deleted"
 
 @cmdline
 def tables(*, confirm=False):
@@ -166,4 +177,4 @@ def tables(*, confirm=False):
     if not confirm: print("Add --confirm to actually make the changes.")
 
 if __name__ == "__main__":
-    clize.run(*_commands, description="Coming soon... from utils.py")
+    clize.run(*_commands, description="Commandline tools from admin.py")
