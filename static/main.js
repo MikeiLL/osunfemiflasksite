@@ -15,7 +15,8 @@ on("click", ".tithe", async (e) => {
       method: "POST",
       headers: {"content-type": "application/json"},
       body: JSON.stringify({
-        "price_id": e.match.id
+        "price_id": e.match.id,
+        "recurring": e.match.dataset.recurring+'',
       }),
     }
   );

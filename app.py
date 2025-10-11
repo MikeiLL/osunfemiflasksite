@@ -37,6 +37,13 @@ endpoint_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
+
+def cache_bust(filename):
+    stat = os.stat('static/' + filename)
+    return f"{filename}?mtime={stat.st_mtime}"
+
+app.jinja_env.globals.update(cache_bust=cache_bust)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 

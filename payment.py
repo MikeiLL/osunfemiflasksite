@@ -26,11 +26,11 @@ stripe.api_key = stripe_keys["secret_key"]
 @payment.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     data = request.json
-    print(data)
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
-            mode="subscription",
+            customer=current_user.stripe_customer_id,
+            mode="subscription" if data["recurring"] == 'true' else "payment",
             line_items=[{"price": data["price_id"], "quantity": 1}],
             success_url=f"{domain_url}/success?session_id={current_user.id}",
             cancel_url=f"{domain_url}/",
