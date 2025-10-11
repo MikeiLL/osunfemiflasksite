@@ -103,3 +103,6 @@ Heroku, AWS, Linode???
 
 ### Stripe
 Test cards: https://docs.stripe.com/testing#cards
+
+### Product Images helper
+`magick -gravity center -background yellow -fill thistle2 -size 100x100 caption:"DG" dedicatedgodchild.png`

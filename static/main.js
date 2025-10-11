@@ -5,12 +5,12 @@ import {
     on,
     DOM,
 } from "https://rosuav.github.io/choc/factory.js";
-const {FORM, INPUT, LABEL} = lindt; //autoimport
+const {FORM, H2, H4, INPUT, LABEL, P} = lindt; //autoimport
 import {simpleconfirm} from "./utils.js";
 
 
 on("click", ".tithe", async (e) => {
-  let resp = await fetch("/payment/create-checkout-session",
+  let resp = true || await fetch("/payment/create-checkout-session",
     {
       method: "POST",
       headers: {"content-type": "application/json"},
@@ -21,9 +21,14 @@ on("click", ".tithe", async (e) => {
     }
   );
   let result = await resp.json();
-  window.location = result.url;
+  if (result.url) {
+    window.location = result.url;
+  } else {
+    console.log("replacing content");
+    replace_content("dialog#main", [H2("Something went wrong."), P([result.error || '', result.message]), H4("Call Iya or better yet, email Pinpin at help@oghtolal.org.")])
+  }
 });
-on("click", "button#signup", (e) => {
+function signup(e) {
   replace_content("dialog#main", [
     FORM({id: "signup"}, [
       LABEL([INPUT({name: "fullname", "aria-required": true, "required": true}), "Full Name"]),
@@ -34,7 +39,8 @@ on("click", "button#signup", (e) => {
     ]),
   ]);
   DOM("dialog#main").showModal();
-});
+}
+on("click", "button#signup", signup);
 on("submit", "form#signup", async (e) => {
   e.preventDefault();
   let response = await fetch("/signup", {
@@ -42,5 +48,7 @@ on("submit", "form#signup", async (e) => {
     body: new FormData(e.match),
   });
   let result = await response.json();
-  console.log(result);
+  if (result.error) {
+    replace_content("dialog#main", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+  }
 })

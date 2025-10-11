@@ -81,11 +81,11 @@ def create_user(fullname, email, password, ifaorishaname=''):
             return {'success': "New Account Created"}
         except psycopg2.IntegrityError as e:
             stripe.Customer.delete(stripe_customer.id)
-            return json.dumps({
+            return {
                 "error":"Something went wrong.",
                 "message": str(e),
                 "description": "Maybe you already have an account under this email."
-            })
+            }
 
 @cmdline
 def set_user_password(email, password):
