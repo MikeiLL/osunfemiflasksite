@@ -29,4 +29,4 @@ def library():
     stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
-    return render_template("student.html", user=current_user, stripecustomer=stripecustomer, purchases=stripe.PaymentIntent.list(customer=current_user.stripe_customer_id))
+    return render_template("student.html", user=current_user, stripecustomer=stripecustomer, purchases=stripe.PaymentIntent.list(limit=50, customer=current_user.stripe_customer_id))

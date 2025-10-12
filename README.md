@@ -106,3 +106,9 @@ Test cards: https://docs.stripe.com/testing#cards
 
 ### Product Images helper
 `magick -gravity center -background yellow -fill thistle2 -size 100x100 caption:"DG" dedicatedgodchild.png`
+
+stripe.checkout.Session.list(limit=3)
+stripe.checkout.Session.retrieve("cs_test_a1ouFxH26VhCOtlEkrKgml9aUJj4Id7n44CbYsYXOcBtS3g49tub2JZDGj")
+stripe.checkout.Session.list_line_items("cs_test_a1ouFxH26VhCOtlEkrKgml9aUJj4Id7n44CbYsYXOcBtS3g49tub2JZDGj")
+ses = stripe.checkout.Session.list(customer="cus_TD9FBhMjlQipgp")
+ses.data[0].id
