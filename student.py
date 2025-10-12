@@ -1,0 +1,32 @@
+from flask import Blueprint, jsonify, request, render_template, redirect
+from flask_login import LoginManager, current_user, login_user
+import stripe
+import os
+import logging
+from dotenv import load_dotenv
+import admin
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+load_dotenv()
+
+student = Blueprint('student', __name__)
+# This allows us to easily manage Stripe related env vairables
+stripe_keys = {
+    "secret_key": os.environ["STRIPE_SECRET_KEY"],
+    "webhook_secret": os.environ["STRIPE_WEBHOOK_SECRET"]
+}
+domain_url = os.environ["DOMAIN_URL"]
+# Set your secret key. Remember to switch to your live secret key in production.
+# See your keys here: <https://dashboard.stripe.com/apikeys>
+stripe.api_key = stripe_keys["secret_key"]
+
+# TODO look into https://docs.stripe.com/api/customer_portal/sessions
+
+@student.route("/library")
+def library():
+    stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
+    if not (current_user and hasattr(current_user, 'user_level')):
+        return redirect("/")
+    return render_template("student.html", user=current_user, stripecustomer=stripecustomer, purchases=stripe.PaymentIntent.list(customer=current_user.stripe_customer_id))

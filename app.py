@@ -19,6 +19,7 @@ import stripe
 from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
 from payment import payment
+from student import student
 import admin
 from dotenv import load_dotenv
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
@@ -52,6 +53,8 @@ def load_user(id):
     return admin.User.from_id(int(id))
 
 app.register_blueprint(payment, url_prefix="/payment")
+
+app.register_blueprint(student, url_prefix="/student")
 
 @app.route("/")
 def index():
