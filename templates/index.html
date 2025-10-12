@@ -13,10 +13,11 @@
     {% endif %}
     {% if item.price['recurring'] %}
     <p>${{item.price['unit_amount'] // 100}} per {{item.price['recurring']['interval']}}</p>
-    <button class=tithe id="{{item.price['id']}}" data-recurring=true>Title</button>
+    <button class=transaction id="{{item.price['id']}}" data-recurring=true
+      data-loggedin="{{user.stripe_customer_id}}">Title</button>
     {% else %}
     <p>${{item.price['unit_amount'] // 100}}</p>
-    <button class=tithe id="{{item.price['id']}}">Purchase</button>
+    <button class=transaction id="{{item.price['id']}}" data-loggedin="{{user.stripe_customer_id}}">Purchase</button>
     {% endif %}
   </li>
   {% endfor %}
