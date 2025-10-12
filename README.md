@@ -109,6 +109,9 @@ Test cards: https://docs.stripe.com/testing#cards
 
 stripe.checkout.Session.list(limit=3)
 stripe.checkout.Session.retrieve("cs_test_a1ouFxH26VhCOtlEkrKgml9aUJj4Id7n44CbYsYXOcBtS3g49tub2JZDGj")
-stripe.checkout.Session.list_line_items("cs_test_a1ouFxH26VhCOtlEkrKgml9aUJj4Id7n44CbYsYXOcBtS3g49tub2JZDGj")
-ses = stripe.checkout.Session.list(customer="cus_TD9FBhMjlQipgp")
-ses.data[0].id
+
+sessions = stripe.checkout.Session.list(customer="cus_TD9FBhMjlQipgp")
+sessions.data[0].id
+lineitems = stripe.checkout.Session.list_line_items("cs_test_a1ouFxH26VhCOtlEkrKgml9aUJj4Id7n44CbYsYXOcBtS3g49tub2JZDGj")
+lineitems.data[0].price.product
+stripe.Product.retrieve('prod_TDFkCHVTwleM61')
