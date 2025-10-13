@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block title %}Library administration{% endblock %}
+
+{% block main %}
+<div class="main">
+  <section>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <pre>
+      {{library_content}}
+    </pre>
+    <form method="post" enctype="multipart/form-data">
+      <fieldset>
+        <legend>New Document</legend>
+        <label><input type=text name=title value="Class One">Title</label>
+        <label><input type=text name=description value="Intro to...">Description</label>
+        <label><input type=text name=minimum_grade value="1">Required Grade</label>
+        <input type="file" name="document">
+      </fieldset>
+      <button type="submit">Upload</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
