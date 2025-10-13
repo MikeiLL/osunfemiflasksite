@@ -4,6 +4,7 @@ import stripe
 import os
 import logging
 import psycopg2
+import psycopg2.extras
 from dotenv import load_dotenv
 import manage
 
@@ -27,6 +28,8 @@ domain_url = os.environ["DOMAIN_URL"]
 stripe.api_key = stripe_keys["secret_key"]
 
 # TODO look into https://docs.stripe.com/api/customer_portal/sessions
+# TODO Look into blueprint level access setting https://stackoverflow.com/a/8514414/2223106
+#https://flask.palletsprojects.com/en/stable/api/#flask.Blueprint.before_request
 
 @admin.route("/")
 def index():
@@ -74,3 +77,12 @@ def new_library_document():
         id = cur.fetchone()[0]
     flash('Succesfully uploaded %s' % request.form["title"])
     return redirect(request.url, 303)
+
+@admin.route("/users")
+def user_listing():
+    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level > 1):
+        return redirect("/")
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute("SELECT * FROM users ORDER BY user_level")
+        users = cur.fetchall()
+    return render_template("user_admin.html", user=current_user, users=users)

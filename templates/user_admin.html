@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+
+{% block title %}Library administration{% endblock %}
+
+{% block main %}
+<div class="main">
+  <section>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <table>
+      <thead>
+        <tr>
+          <td>Ifa/Orisha Name</td>
+          <td>Full Name</td>
+          <td>Grade Level</td>
+          <td>User Level</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{u.ifaorishaname}}</td>
+          <td>{{u.fullname}}</td>
+          <td>{{u.grade_level}}</td>
+          <td>{{u.user_level}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}
