@@ -3,6 +3,7 @@ from flask_login import LoginManager, current_user, login_user
 import stripe
 import os
 import logging
+import psycopg2
 from dotenv import load_dotenv
 import admin
 
@@ -10,6 +11,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+DATABASE_URL = os.environ["DATABASE_URL"]
+
+_conn = psycopg2.connect(DATABASE_URL)
 
 student = Blueprint('student', __name__)
 # This allows us to easily manage Stripe related env vairables
@@ -24,9 +28,14 @@ stripe.api_key = stripe_keys["secret_key"]
 
 # TODO look into https://docs.stripe.com/api/customer_portal/sessions
 
-@student.route("/library")
+@student.route("/")
 def library():
-    stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
+    stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
+    subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+    with _conn, _conn.cursor() as cur:
+        if (len(subscriptions.data) >= 1):
+            cur.execute("SELECT * FROM library_content WHERE active = true WHERE active = true")
+            content = cur.fetchall()
     return render_template("student.html", user=current_user, stripecustomer=stripecustomer, purchases=stripe.PaymentIntent.list(limit=50, customer=current_user.stripe_customer_id))
