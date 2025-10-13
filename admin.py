@@ -40,7 +40,7 @@ def library():
         return redirect("/")
 
     with _conn, _conn.cursor() as cur:
-        cur.execute("SELECT title, description, filename, minimum_grade FROM library_content WHERE active")
+        cur.execute("SELECT title, description, filename, minimum_grade, active FROM library_content")
         library_content = cur.fetchall()
         print(library_content)
     return render_template("library_admin.html", user=current_user, library_content=library_content)
