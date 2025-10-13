@@ -4,7 +4,7 @@ import stripe
 import os
 import logging
 from dotenv import load_dotenv
-import admin
+import manage
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

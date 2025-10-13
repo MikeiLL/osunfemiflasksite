@@ -5,7 +5,7 @@ import os
 import logging
 import psycopg2
 from dotenv import load_dotenv
-import admin
+import manage
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

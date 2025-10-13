@@ -20,7 +20,8 @@ from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
 from payment import payment
 from student import student
-import admin
+from admin import admin
+import manage
 from dotenv import load_dotenv
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 
@@ -50,11 +51,11 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
-    return admin.User.from_id(int(id))
+    return manage.User.from_id(int(id))
 
 app.register_blueprint(payment, url_prefix="/payment")
-
 app.register_blueprint(student, url_prefix="/student")
+app.register_blueprint(admin, url_prefix="/admin")
 
 @app.route("/")
 def index():
@@ -77,7 +78,7 @@ def logout():
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    user = admin.create_user(
+    user = manage.create_user(
         request.form['fullname'],
         request.form["email"],
         request.form["password"],
@@ -87,7 +88,7 @@ def signup():
 
 @app.route("/login", methods=["POST"])
 def login_post():
-    user = admin.User.from_credentials(
+    user = manage.User.from_credentials(
         request.form["email"],
         request.form["password"]
     )
