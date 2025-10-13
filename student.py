@@ -37,5 +37,5 @@ def library():
     with _conn, _conn.cursor() as cur:
         if (len(subscriptions.data) >= 1):
             cur.execute("SELECT * FROM library_content WHERE active = true")
-            content = cur.fetchall()
-    return render_template("student.html", user=current_user, stripecustomer=stripecustomer, purchases=stripe.PaymentIntent.list(limit=50, customer=current_user.stripe_customer_id))
+            mylibrary = cur.fetchall()
+    return render_template("student.html", user=current_user, mylibrary=mylibrary)

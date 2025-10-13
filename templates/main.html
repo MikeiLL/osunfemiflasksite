@@ -56,7 +56,14 @@
     <h3>I'm in the footer</h3>
   </footer>
   {% endblock %}
-  <dialog id=main></dialog>
+  <dialog id=main>
+    <header id="dlg_header" aria-label="dialog header">
+      <h2></h2>
+      <button class="dialog_close" type="button">x</button>
+    </header>
+    <section></section>
+    <footer aria-label="dialog footer"></footer>
+  </dialog>
 </body>
 
 </html>

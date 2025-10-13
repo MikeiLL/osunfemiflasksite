@@ -37,7 +37,8 @@ on("click", ".transaction", (e) => {
 });
 
 function login(e) {
-  replace_content("dialog#main", [
+  replace_content("dialog#main h2", "Login");
+  replace_content("dialog#main section", [
     FORM({id: "login"}, [
       FIELDSET([
         LEGEND("Login"),
@@ -46,8 +47,11 @@ function login(e) {
         INPUT({type: "submit"}, "Submit"),
       ]),
     ]),
+  ]);
+  replace_content("dialog#main footer", [
     BUTTON({id: "register", href: "forgotpassword"}, "Register"),
     A({href: "forgotpassword"}, "Forgot password"),
+    BUTTON({class: "dialog_close"}, "Cancel"),
   ]);
   DOM("dialog#main").showModal();
 }
@@ -64,7 +68,8 @@ on("submit", "form#login", async (e) => {
   }
 })
 function signup(e) {
-  replace_content("dialog#main", [
+  replace_content("dialog#main h2", "Register");
+  replace_content("dialog#main section", [
     FORM({id: "signup"}, [
       FIELDSET([
         LEGEND("Register"),
@@ -75,6 +80,9 @@ function signup(e) {
         INPUT({type: "submit"}, "Submit"),
       ])
     ]),
+  ]);
+  replace_content("dialog#main footer", [
+    BUTTON({class: "dialog_close"}, "Cancel"),
   ]);
   if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
 }
