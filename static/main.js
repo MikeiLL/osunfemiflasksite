@@ -5,7 +5,7 @@ import {
     on,
     DOM,
 } from "https://rosuav.github.io/choc/factory.js";
-const {A, BUTTON, FIELDSET, FORM, H2, H4, INPUT, LABEL, LEGEND, P} = lindt; //autoimport
+const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P} = lindt; //autoimport
 import {simpleconfirm} from "./utils.js";
 
 async function make_transaction(e) {
@@ -24,7 +24,7 @@ async function make_transaction(e) {
     window.location = result.url;
   } else {
     console.log("replacing content");
-    replace_content("dialog#main", [H2("Something went wrong."), P([result.error || '', result.message]), H4("Call Iya or better yet, email Pinpin at help@oghtolal.org.")])
+    replace_content("dialog#main", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
   }
 }
 
@@ -49,12 +49,19 @@ function login(e) {
     ]),
   ]);
   replace_content("dialog#main footer", [
-    BUTTON({id: "register", href: "forgotpassword"}, "Register"),
+    BUTTON({id: "register"}, "Register"),
     A({href: "forgotpassword"}, "Forgot password"),
     BUTTON({class: "dialog_close"}, "Cancel"),
   ]);
   DOM("dialog#main").showModal();
 }
+
+on("click", "a[href=forgotpassword]", (e) => {
+  e.preventDefault();
+  replace_content("dialog#main header h2", "Forgot Your Password?");
+  replace_content("dialog#main section", H3(common_strings.help_text));
+  replace_content("dialog#main footer", BUTTON({class: "dialog_close"}, "Cancel"));
+})
 
 on("submit", "form#login", async (e) => {
   e.preventDefault();
@@ -64,7 +71,7 @@ on("submit", "form#login", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    replace_content("dialog#main", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    replace_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
   }
 })
 function signup(e) {

@@ -15,6 +15,11 @@
   <link rel="icon" href="/static/images/favicon.png">
   {% block load_scripts %}
   <script src="/static/{{ cache_bust('main.js') }}" type="module"></script>
+  <script>
+    const common_strings = {
+      help_text: "Call Iya or better yet, email Pinpin at help@oghtolal.com."
+    }
+  </script>
   {% endblock %}
 </head>
 {% endblock %}
