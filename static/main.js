@@ -9,7 +9,7 @@ const {A, BUTTON, FIELDSET, FORM, H2, H4, INPUT, LABEL, LEGEND, P} = lindt; //au
 import {simpleconfirm} from "./utils.js";
 
 async function make_transaction(e) {
-  let resp = true || await fetch("/payment/create-checkout-session",
+  let resp = await fetch("/payment/create-checkout-session",
     {
       method: "POST",
       headers: {"content-type": "application/json"},
