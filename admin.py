@@ -81,3 +81,15 @@ def user_listing():
         cur.execute("SELECT * FROM users ORDER BY user_level")
         users = cur.fetchall()
     return render_template("user_admin.html", user=current_user, users=users)
+
+@admin.route("/users", methods=["post"])
+def user_update():
+    fields, params = [], []
+    for field in ["fullname", "ifaorishaname", "email", "user_level", "grade_level"]:
+        if field in request.form:
+            fields.append(field + " = %s")
+            params.append(request.form[field])
+    params.append(request.form["userid"])
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute("UPDATE users SET " + ", ".join(fields) + " WHERE id = %s", params)
+    return redirect("/admin/users"), 303

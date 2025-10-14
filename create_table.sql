@@ -15,7 +15,7 @@ users
   email varchar not null unique  -- This is also the customer name in Stripe
   password varchar not null default ''
   user_level int not null default 1 -- noaccess=0, manager=1, admin=3
-  grade_level int references grade_levels -- for access to classes
+  grade_level int references grade_levels default 0 -- for access to classes
   stripe_customer_id varchar not null default ''
 
 -- TODO users stores reference won't work when running

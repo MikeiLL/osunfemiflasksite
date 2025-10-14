@@ -123,11 +123,12 @@ on("click", "button.useredit", (e) => {
   set_content(row, [...row.querySelectorAll("td")].map(c => {
     if (c.className == "button") {
       return TD([
-        BUTTON({type: "submit"}, "Submit")
+        BUTTON({type: "submit"}, "Submit"),
+        INPUT({type: "hidden", value: row.id.replace("user_", ""), name: "userid"})
       ])
     }
     return TD([
-    INPUT({type: c.className, style: "background-color: aliceblue;", value: c.innerText})
+    INPUT({name: c.dataset.name, type: c.className, style: "background-color: aliceblue;", value: c.innerText})
   ])}
   ))
 })

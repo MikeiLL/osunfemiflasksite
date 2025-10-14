@@ -14,7 +14,7 @@
     </ul>
     {% endif %}
     {% endwith %}
-    <form id="usereditform">
+    <form id="usereditform" method="post">
       <table>
         <thead>
           <tr>
@@ -29,11 +29,11 @@
         <tbody>
           {% for u in users %}
           <tr id="user_{{u.id}}">
-            <td class="text">{{u.ifaorishaname}}</td>
-            <td class="text">{{u.fullname}}</td>
-            <td class="number">{{u.grade_level}}</td>
-            <td class="number">{{u.user_level}}</td>
-            <td class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
+            <td data-name="ifaorishaname" class="text">{{u.ifaorishaname}}</td>
+            <td data-name="fullname" class="text">{{u.fullname}}</td>
+            <td data-name="grade_level" class="number">{{u.grade_level}}</td>
+            <td data-name="user_level" class="number">{{u.user_level}}</td>
+            <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
             <td class="button"><button type=button class="useredit" title="edit user">edit user</button></td>
           </tr>
           {% endfor %}
