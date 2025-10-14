@@ -58,7 +58,6 @@ app.register_blueprint(payment, url_prefix="/payment")
 app.register_blueprint(student, url_prefix="/student")
 app.register_blueprint(admin, url_prefix="/admin")
 
-
 @app.route("/")
 def index():
     products = [p for p in stripe.Product.list() if p['active']]
