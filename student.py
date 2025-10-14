@@ -16,6 +16,12 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 _conn = psycopg2.connect(DATABASE_URL)
 
 student = Blueprint('student', __name__)
+
+@student.before_request
+def restrict_bp_to_students():
+    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level >= 1):
+        return redirect("/")
+
 # This allows us to easily manage Stripe related env vairables
 stripe_keys = {
     "secret_key": os.environ["STRIPE_SECRET_KEY"],
@@ -30,8 +36,6 @@ stripe.api_key = stripe_keys["secret_key"]
 
 @student.route("/")
 def library():
-    if not (current_user and hasattr(current_user, 'user_level')):
-        return redirect("/")
     stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
     with _conn, _conn.cursor() as cur:

@@ -17,6 +17,12 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 _conn = psycopg2.connect(DATABASE_URL)
 
 admin = Blueprint('admin', __name__)
+
+@admin.before_request
+def restrict_bp_to_admins():
+    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level > 1):
+        return redirect("/")
+
 # This allows us to easily manage Stripe related env vairables
 stripe_keys = {
     "secret_key": os.environ["STRIPE_SECRET_KEY"],
@@ -27,21 +33,12 @@ domain_url = os.environ["DOMAIN_URL"]
 # See your keys here: <https://dashboard.stripe.com/apikeys>
 stripe.api_key = stripe_keys["secret_key"]
 
-# TODO look into https://docs.stripe.com/api/customer_portal/sessions
-# TODO Look into blueprint level access setting https://stackoverflow.com/a/8514414/2223106
-#https://flask.palletsprojects.com/en/stable/api/#flask.Blueprint.before_request
-
 @admin.route("/")
 def index():
-    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level > 1):
-        return redirect("/")
     return "hi, admin go to slash library for something to do"
 
 @admin.route("/library")
 def library():
-    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level > 1):
-        return redirect("/")
-
     with _conn, _conn.cursor() as cur:
         cur.execute("SELECT title, description, filename, minimum_grade, active FROM library_content")
         library_content = cur.fetchall()
@@ -80,8 +77,6 @@ def new_library_document():
 
 @admin.route("/users")
 def user_listing():
-    if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level > 1):
-        return redirect("/")
     with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute("SELECT * FROM users ORDER BY user_level")
         users = cur.fetchall()
