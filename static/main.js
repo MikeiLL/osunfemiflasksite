@@ -8,29 +8,36 @@ import {
 const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P} = lindt; //autoimport
 import {simpleconfirm} from "./utils.js";
 
-async function make_transaction(e) {
+const PURCHASE = {
+  price_id: null,
+  recurring: null,
+}
+
+async function make_transaction(purchase) {
   let resp = await fetch("/payment/create-checkout-session",
     {
       method: "POST",
       headers: {"content-type": "application/json"},
       body: JSON.stringify({
-        "price_id": e.match.id,
-        "recurring": e.match.dataset.recurring+'',
+        "price_id": purchase.price_id,
+        "recurring": purchase.recurring,
       }),
     }
   );
   let result = await resp.json();
+  PURCHASE.price_id = null;
   if (result.url) {
     window.location = result.url;
   } else {
-    console.log("replacing content");
-    replace_content("dialog#main", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
+    replace_content("dialog#main section", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
   }
 }
 
 on("click", ".transaction", (e) => {
+  PURCHASE.price_id = e.match.id;
+  PURCHASE.recurring = e.match.dataset.recurring;
   if (e.match.dataset.loggedin) {
-    make_transaction(e)
+    make_transaction(PURCHASE);
   } else {
     login(e);
   };
@@ -65,13 +72,18 @@ on("click", "a[href=forgotpassword]", (e) => {
 
 on("submit", "form#login", async (e) => {
   e.preventDefault();
+  DOM("dialog#spinner").showModal();
   let response = await fetch("/login", {
     method: "POST",
     body: new FormData(e.match),
   });
   let result = await response.json();
+  DOM("dialog#spinner").close()
   if (result.error) {
-    replace_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
+    replace_content("dialog#main #alertmessages", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
+  } else {
+    if (PURCHASE.price_id) make_transaction(PURCHASE);
+    DOM("dialog#main").close();
   }
 })
 function signup(e) {
@@ -93,6 +105,7 @@ function signup(e) {
   ]);
   if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
 }
+on("click", "button#loginbutton", login);
 on("click", "button#signup", signup);
 on("click", "button#register", signup);
 on("submit", "form#signup", async (e) => {
@@ -103,6 +116,6 @@ on("submit", "form#signup", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    replace_content("dialog#main", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    replace_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
   }
 })

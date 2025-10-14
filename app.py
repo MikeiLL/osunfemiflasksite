@@ -18,13 +18,14 @@ import stripe
 
 from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from payment import payment
 from student import student
 from admin import admin
 import manage
 import psycopg2
 from dotenv import load_dotenv
-from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+import time
 
 load_dotenv()
 
@@ -95,10 +96,9 @@ def login_post():
     )
     if user:
         login_user(user)
-        return redirect('/')
+        return jsonify(user)
     else:
-        flash("Invalid email or password")
-        return redirect("/")
+        return jsonify({'error': "Invalid email or password"})
 
 @app.route("/success")
 def success():

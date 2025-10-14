@@ -32,10 +32,14 @@
       </div>
       <nav>
         <ul>
+          {% if user.user_level %}
           {% if user.user_level == 3 %}
           <li><a href="/">YOU are an admin</a></li>
           {% else %}
           <li><a href="/">YOU are level {{user.user_level}}</a></li>
+          {% endif %}
+          {% else %}
+          <button type=button id="loginbutton">Login</button>
           {% endif %}
         </ul>
       </nav>
@@ -67,7 +71,11 @@
       <button class="dialog_close" type="button">x</button>
     </header>
     <section></section>
+    <div id="alertmessages"></div>
     <footer aria-label="dialog footer"></footer>
+  </dialog>
+  <dialog id=spinner>
+    LOADING...
   </dialog>
 </body>
 
