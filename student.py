@@ -4,6 +4,7 @@ import stripe
 import os
 import logging
 import psycopg2
+import psycopg2.extras
 from dotenv import load_dotenv
 import manage
 
@@ -38,10 +39,11 @@ stripe.api_key = stripe_keys["secret_key"]
 def library():
     stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
-    with _conn, _conn.cursor() as cur:
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         if (len(subscriptions.data) >= 1):
             cur.execute("SELECT * FROM library_content WHERE active = true")
             mylibrary = cur.fetchall()
+            print(mylibrary)
     return render_template("student.html", user=current_user, mylibrary=mylibrary)
 
 @student.route('/docs/<id>')

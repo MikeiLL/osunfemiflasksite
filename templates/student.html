@@ -5,9 +5,18 @@
 {% block main %}
 <div class="main">
   <section>
-    <pre>
-      {{mylibrary}}
-    </pre>
+    <ul>
+      {% for doc in mylibrary %}
+      <li>
+        <a href="docs/{{doc.id}}" title="{{doc.description}}">
+          <div class="libraryitem">
+            <h3>{{ doc.title }}</h3>
+            <p>{{doc.description}}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
   </section>
 </div>
 {% endblock %}
