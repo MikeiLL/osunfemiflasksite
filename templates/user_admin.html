@@ -21,6 +21,7 @@
           <td>Full Name</td>
           <td>Grade Level</td>
           <td>User Level</td>
+          <td>Email</td>
         </tr>
       </thead>
       <tbody>
@@ -30,6 +31,7 @@
           <td>{{u.fullname}}</td>
           <td>{{u.grade_level}}</td>
           <td>{{u.user_level}}</td>
+          <td><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
         </tr>
         {% endfor %}
       </tbody>

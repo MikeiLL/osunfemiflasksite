@@ -299,3 +299,7 @@ stripe.Subscription.list(customer="cus_TD9FBhMjlQipgp", status="all")
       "trial_start": null
     }
     ```
+
+- edit users screen
+- student document access by grade
+- for now ignore concept of purchasing grades

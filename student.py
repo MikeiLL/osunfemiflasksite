@@ -37,13 +37,19 @@ stripe.api_key = stripe_keys["secret_key"]
 
 @student.route("/")
 def library():
-    stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
-    subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+    #stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
+    MAX_GRADE = 6
+    user_grade = current_user.grade_level
+    if user_grade < MAX_GRADE:
+        subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+        if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
     with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        if (len(subscriptions.data) >= 1):
-            cur.execute("SELECT * FROM library_content WHERE active = true")
-            mylibrary = cur.fetchall()
-            print(mylibrary)
+        cur.execute("""
+            SELECT * FROM library_content
+            WHERE active = true AND minimum_grade <= %s
+        """, (user_grade,))
+        mylibrary = cur.fetchall()
+        print(mylibrary)
     return render_template("student.html", user=current_user, mylibrary=mylibrary)
 
 @student.route('/docs/<id>')
