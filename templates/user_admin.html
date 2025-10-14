@@ -14,28 +14,32 @@
     </ul>
     {% endif %}
     {% endwith %}
-    <table>
-      <thead>
-        <tr>
-          <td>Ifa/Orisha Name</td>
-          <td>Full Name</td>
-          <td>Grade Level</td>
-          <td>User Level</td>
-          <td>Email</td>
-        </tr>
-      </thead>
-      <tbody>
-        {% for u in users %}
-        <tr>
-          <td>{{u.ifaorishaname}}</td>
-          <td>{{u.fullname}}</td>
-          <td>{{u.grade_level}}</td>
-          <td>{{u.user_level}}</td>
-          <td><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <form id="usereditform">
+      <table>
+        <thead>
+          <tr>
+            <td>Ifa/Orisha Name</td>
+            <td>Full Name</td>
+            <td>Grade Level</td>
+            <td>User Level</td>
+            <td>Email</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr id="user_{{u.id}}">
+            <td class="text">{{u.ifaorishaname}}</td>
+            <td class="text">{{u.fullname}}</td>
+            <td class="number">{{u.grade_level}}</td>
+            <td class="number">{{u.user_level}}</td>
+            <td class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
+            <td class="button"><button type=button class="useredit" title="edit user">edit user</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
   </section>
 </div>
 {% endblock %}

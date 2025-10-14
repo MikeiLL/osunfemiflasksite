@@ -1,11 +1,10 @@
 import {
-    lindt,
     choc,
-    replace_content,
+    set_content,
     on,
     DOM,
 } from "https://rosuav.github.io/choc/factory.js";
-const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P} = lindt; //autoimport
+const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P, TD} = choc; //autoimport
 import {simpleconfirm} from "./utils.js";
 
 const PURCHASE = {
@@ -29,7 +28,7 @@ async function make_transaction(purchase) {
   if (result.url) {
     window.location = result.url;
   } else {
-    replace_content("dialog#main section", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
+    set_content("dialog#main section", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
   }
 }
 
@@ -44,8 +43,8 @@ on("click", ".transaction", (e) => {
 });
 
 function login(e) {
-  replace_content("dialog#main h2", "Login");
-  replace_content("dialog#main section", [
+  set_content("dialog#main h2", "Login");
+  set_content("dialog#main section", [
     FORM({id: "login"}, [
       FIELDSET([
         LEGEND("Login"),
@@ -55,7 +54,7 @@ function login(e) {
       ]),
     ]),
   ]);
-  replace_content("dialog#main footer", [
+  set_content("dialog#main footer", [
     BUTTON({id: "register"}, "Register"),
     A({href: "forgotpassword"}, "Forgot password"),
     BUTTON({class: "dialog_close"}, "Cancel"),
@@ -65,9 +64,9 @@ function login(e) {
 
 on("click", "a[href=forgotpassword]", (e) => {
   e.preventDefault();
-  replace_content("dialog#main header h2", "Forgot Your Password?");
-  replace_content("dialog#main section", H3(common_strings.help_text));
-  replace_content("dialog#main footer", BUTTON({class: "dialog_close"}, "Cancel"));
+  set_content("dialog#main header h2", "Forgot Your Password?");
+  set_content("dialog#main section", H3(common_strings.help_text));
+  set_content("dialog#main footer", BUTTON({class: "dialog_close"}, "Cancel"));
 })
 
 on("submit", "form#login", async (e) => {
@@ -80,7 +79,7 @@ on("submit", "form#login", async (e) => {
   let result = await response.json();
   DOM("dialog#spinner").close()
   if (result.error) {
-    replace_content("dialog#main #alertmessages", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
+    set_content("dialog#main #alertmessages", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
   } else {
     if (PURCHASE.price_id) make_transaction(PURCHASE);
     DOM("dialog#main").close();
@@ -100,7 +99,7 @@ function signup(e) {
       ])
     ]),
   ]);
-  replace_content("dialog#main footer", [
+  set_content("dialog#main footer", [
     BUTTON({class: "dialog_close"}, "Cancel"),
   ]);
   if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
@@ -116,6 +115,19 @@ on("submit", "form#signup", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    replace_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    set_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
   }
+});
+on("click", "button.useredit", (e) => {
+  let row = e.match.closest("tr");
+  set_content(row, [...row.querySelectorAll("td")].map(c => {
+    if (c.className == "button") {
+      return TD([
+        BUTTON({type: "submit"}, "Submit")
+      ])
+    }
+    return TD([
+    INPUT({type: c.className, style: "background-color: aliceblue;", value: c.innerText})
+  ])}
+  ))
 })
