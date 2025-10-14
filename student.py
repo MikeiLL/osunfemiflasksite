@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, redirect
+from flask import Blueprint, jsonify, request, render_template, redirect, make_response
 from flask_login import LoginManager, current_user, login_user
 import stripe
 import os
@@ -43,3 +43,19 @@ def library():
             cur.execute("SELECT * FROM library_content WHERE active = true")
             mylibrary = cur.fetchall()
     return render_template("student.html", user=current_user, mylibrary=mylibrary)
+
+@student.route('/docs/<id>')
+def get_pdf(id):
+        subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+        if not subscriptions.data:
+            return render_template("400_generic.html", user=current_user, e="Whoops. This requires a subscription."), 403
+        with _conn, _conn.cursor() as cur:
+            cur.execute("SELECT filecontent FROM library_content WHERE id = %s", (id,))
+            binary_pdf = cur.fetchone()
+        if binary_pdf:
+            response = make_response(bytes(binary_pdf[0]))
+            response.headers['Content-Type'] = 'application/pdf'
+            #response.headers['Content-Disposition'] = 'inline; filename=%s.pdf' % 'yourfilename' (for download)
+        else:
+            return render_template("400_generic.html", user=current_user, e="Whoops the file you were looking for doesn't seem to exist."), 404
+        return response
