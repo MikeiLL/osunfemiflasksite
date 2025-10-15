@@ -31,8 +31,16 @@ https://github.com/duplxey/flask-stripe-subscriptions/blob/master/app.py
 - - set grade level (1-8)
 ### Mail handling
 
-## Provisioning and Deployment
-Heroku, AWS, Linode???
+
+### Heroku
+`heroku addons --help`
+`heroku addons services`
+`heroku addons:add heroku-postgresql`
+`heroku addons:info postgresql-metric-86056`
+`heroku addons:add heroku-postgresq`
+`heroku addons:docs heroku-postgresql`
+`heroku pg:psq`
+`heroku config`, `heroku config:set`
 
 ### Products Object
 ```
@@ -303,9 +311,5 @@ stripe.Subscription.list(customer="cus_TD9FBhMjlQipgp", status="all")
 - edit users screen
 - student document access by grade
 - for now ignore concept of purchasing grades
-
-### Heroku
-heroku addons --help
-heroku addons:add heroku-postgresq
-heroku addons:docs heroku-postgresql
-heroku pg:psq
+- admin library screen
+- basic css
