@@ -49,7 +49,6 @@ def library():
             WHERE active = true AND minimum_grade <= %s
         """, (user_grade,))
         mylibrary = cur.fetchall()
-        print(mylibrary)
     return render_template("student.html", user=current_user, mylibrary=mylibrary)
 
 @student.route('/docs/<id>')

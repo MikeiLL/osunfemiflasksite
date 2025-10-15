@@ -3,6 +3,7 @@ from flask_login import LoginManager, current_user, login_user
 import stripe
 import os
 import logging
+from database import query
 from dotenv import load_dotenv
 import manage
 
@@ -22,23 +23,29 @@ domain_url = os.environ["DOMAIN_URL"]
 # See your keys here: <https://dashboard.stripe.com/apikeys>
 stripe.api_key = stripe_keys["secret_key"]
 
+def increase_grade_level(amt):
+    query("update users set grade_level = %s where id = %s", (amt, current_user.id))
+    return True
 
 @payment.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     data = request.json
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            customer=current_user.stripe_customer_id,
-            mode="subscription" if data["recurring"] == 'true' else "payment",
-            line_items=[{"price": data["price_id"], "quantity": 1}],
-            success_url=f"{domain_url}/success?session_id={current_user.id}",
-            cancel_url=f"{domain_url}/",
-        )
-        print(checkout_session)
-        return jsonify({"url": checkout_session.url})
-    except Exception as e:
-        return jsonify(error=str(e)), 403
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        customer=current_user.stripe_customer_id,
+        mode="subscription" if data["recurring"] == 'true' else "payment",
+        line_items=[{"price": data["price_id"], "quantity": 1}],
+        success_url=f"{domain_url}/student?student_id={current_user.id}",
+        cancel_url=f"{domain_url}/cancel",
+    )
+    max_grade_level = query("select max(level) from grade_levels")[0][0]
+    if not current_user.grade_level == max_grade_level:
+        list_line_items = stripe.checkout.Session.list_line_items(checkout_session.id)
+        product = stripe.Product.retrieve(list_line_items.data[0].price.product)
+        # TODO increase grade_level of subscriptions also, but with webhook prolly
+        if product.metadata.grade_increase:
+            increase_grade_level(min(current_user.grade_level + int(product.metadata.grade_increase), max_grade_level))
+    return jsonify({"url": checkout_session.url})
 
 @payment.route("/webhook", methods=["POST"])
 def stripe_webhook():
