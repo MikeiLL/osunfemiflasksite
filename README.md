@@ -303,3 +303,9 @@ stripe.Subscription.list(customer="cus_TD9FBhMjlQipgp", status="all")
 - edit users screen
 - student document access by grade
 - for now ignore concept of purchasing grades
+
+### Heroku
+heroku addons --help
+heroku addons:add heroku-postgresq
+heroku addons:docs heroku-postgresql
+heroku pg:psq

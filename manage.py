@@ -126,44 +126,44 @@ def tables(*, confirm=False):
             if confirm: query(query_string)
             else: print(query_string)
 
-        for line in open("create_table.sql"):
-            line = line.rstrip()
-            if line == "" or line.startswith("--"): continue
-            # Flush-left lines are table names
-            if line == line.lstrip():
-                finish()
-                tb = line; coldefs = []
-                rows = query("select column_name, data_type from information_schema.columns where table_name=%s", (tb,))
-                cols = {row[0]:row[1] for row in rows}
-                # New tables want a series of column definitions; altered tables want any added
-                # columns prefixed with the command "add".
-                is_new = "add" if cols else ""
-                continue
-            # Otherwise, it should be a column definition, starting (after whitespace) with the column name.
-            colname, defn = line.strip().split(" ", 1)
-            if colname in cols:
-                # Column already exists. Check its data type.
-                # Assume that all data types are unique within one space-delimited word. For example,
-                # the data type "double precision" will be treated as "double".
-                # NOTE: You may not be able to use this to change a data type to or from 'serial',
-                # since that's not (strictly speaking) a data type.
-                want_type = defn.split(" ", 1)[0]
-                want_type = {
-                    "double": "double precision",
-                    "serial": "integer", "int": "integer",
-                    "varchar": "character varying",
-                    "timestamptz": "timestamp with time zone",
-                }.get(want_type, want_type)
-                have_type = cols[colname]
-                if want_type != have_type:
-                    coldefs.append("alter %s set data type %s" % (colname, want_type))
-                del cols[colname]
-            else:
-                # Column doesn't exist. Add it!
-                # Note that we include a newline here so that a comment will be properly terminated.
-                # If you look at the query, it'll have all its commas oddly placed, but that's okay.
-                coldefs.append("%s %s %s\n" % (is_new, colname, defn))
-        finish()
+    for line in open("create_table.sql"):
+        line = line.rstrip()
+        if line == "" or line.startswith("--"): continue
+        # Flush-left lines are table names
+        if line == line.lstrip():
+            finish()
+            tb = line; coldefs = []
+            rows = query("select column_name, data_type from information_schema.columns where table_name=%s", (tb,))
+            cols = {row[0]:row[1] for row in rows}
+            # New tables want a series of column definitions; altered tables want any added
+            # columns prefixed with the command "add".
+            is_new = "add" if cols else ""
+            continue
+        # Otherwise, it should be a column definition, starting (after whitespace) with the column name.
+        colname, defn = line.strip().split(" ", 1)
+        if colname in cols:
+            # Column already exists. Check its data type.
+            # Assume that all data types are unique within one space-delimited word. For example,
+            # the data type "double precision" will be treated as "double".
+            # NOTE: You may not be able to use this to change a data type to or from 'serial',
+            # since that's not (strictly speaking) a data type.
+            want_type = defn.split(" ", 1)[0]
+            want_type = {
+                "double": "double precision",
+                "serial": "integer", "int": "integer",
+                "varchar": "character varying",
+                "timestamptz": "timestamp with time zone",
+            }.get(want_type, want_type)
+            have_type = cols[colname]
+            if want_type != have_type:
+                coldefs.append("alter %s set data type %s" % (colname, want_type))
+            del cols[colname]
+        else:
+            # Column doesn't exist. Add it!
+            # Note that we include a newline here so that a comment will be properly terminated.
+            # If you look at the query, it'll have all its commas oddly placed, but that's okay.
+            coldefs.append("%s %s %s\n" % (is_new, colname, defn))
+    finish()
     if not confirm: print("Add --confirm to actually make the changes.")
 
 if __name__ == "__main__":
