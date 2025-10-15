@@ -24,6 +24,7 @@
             <td>User Level</td>
             <td>Email</td>
             <td></td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
             <td data-name="user_level" class="number">{{u.user_level}}</td>
             <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
             <td class="button"><button type=button class="useredit" title="edit user">edit user</button></td>
+            <td class="button"><button type=button class="userremove" title="edit user">remove</button></td>
           </tr>
           {% endfor %}
         </tbody>

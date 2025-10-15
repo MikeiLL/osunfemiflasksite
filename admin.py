@@ -83,6 +83,12 @@ def user_update():
     dict_query("UPDATE users SET " + ", ".join(fields) + " WHERE id = %s", params)
     return redirect("/admin/users"), 303
 
+@admin.route("/users", methods=["delete"])
+def user_delete():
+    print(request.data)
+    dict_query("DELETE FROM users WHERE id = %s", )
+    return jsonify({"message": "user deleted"})
+
 @admin.route('/docs/<id>')
 def get_pdf(id):
     binary_pdf = query("SELECT filecontent FROM library_content", (id,))[0]
