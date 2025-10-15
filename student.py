@@ -6,15 +6,12 @@ import logging
 import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
-import manage
+from database import query, dict_query
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-DATABASE_URL = os.environ["DATABASE_URL"]
-
-_conn = psycopg2.connect(DATABASE_URL)
 
 student = Blueprint('student', __name__)
 
@@ -43,12 +40,10 @@ def library():
     if user_grade < MAX_GRADE:
         subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
         if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("""
-            SELECT * FROM library_content
-            WHERE active = true AND minimum_grade <= %s
-        """, (user_grade,))
-        mylibrary = cur.fetchall()
+    mylibrary = dict_query("""
+        SELECT * FROM library_content
+        WHERE active = true AND minimum_grade <= %s
+    """, (user_grade,))
     return render_template("student.html", user=current_user, mylibrary=mylibrary)
 
 @student.route('/docs/<id>')
@@ -56,9 +51,7 @@ def get_pdf(id):
         subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
         if not subscriptions.data:
             return render_template("400_generic.html", user=current_user, e="Whoops. This requires a subscription."), 403
-        with _conn, _conn.cursor() as cur:
-            cur.execute("SELECT filecontent FROM library_content WHERE id = %s", (id,))
-            binary_pdf = cur.fetchone()
+        binary_pdf = query("SELECT filecontent FROM library_content WHERE id = %s", (id,))[0]
         if binary_pdf:
             response = make_response(bytes(binary_pdf[0]))
             response.headers['Content-Type'] = 'application/pdf'

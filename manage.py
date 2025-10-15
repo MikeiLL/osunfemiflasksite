@@ -11,10 +11,10 @@ import stripe
 from dotenv import load_dotenv
 
 load_dotenv()
+from database import query, dict_query
+
 stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 DATABASE_URL = os.environ["DATABASE_URL"]
-
-_conn = psycopg2.connect(DATABASE_URL)
 
 _commands = []
 def cmdline(f):
@@ -33,17 +33,13 @@ class User(UserMixin):
 
     @classmethod
     def from_id(cls, id, password=None):
-        with _conn, _conn.cursor() as cur:
-            cur.execute("SELECT " + ", ".join(cls.__dataclass_fields__) + " FROM users WHERE id=%s", (id,))
-            data = cur.fetchone()
+        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + " FROM users WHERE id=%s", (id,))[0]
         if not data: return None
         return cls(*data)
 
     @classmethod
     def from_credentials(cls, login, password):
-        with _conn, _conn.cursor() as cur:
-            cur.execute("SELECT " + ", ".join(cls.__dataclass_fields__) + ", password FROM users WHERE email=%s", (login.lower(),),)
-            data = cur.fetchone()
+        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + ", password FROM users WHERE email=%s", (login.lower(),),)[0]
         if not data: return None
         if not utils.check_password(password, data[-1]):
             # Passwords do not match. Pretend the user doesn't exist.
@@ -73,19 +69,18 @@ def create_user(fullname, email, password, ifaorishaname=''):
         )
     except stripe.error.InvalidRequestError as e:
             return json.dumps({'error':str(e)})
-    with _conn, _conn.cursor() as cur:
-        pwd = utils.hash_password(password)
-        try:
-            cur.execute("INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
-                                            (fullname, email, pwd, ifaorishaname, stripe_customer.id))
-            return {'success': "New Account Created"}
-        except psycopg2.IntegrityError as e:
-            stripe.Customer.delete(stripe_customer.id)
-            return {
-                "error":"Something went wrong.",
-                "message": str(e),
-                "description": "Maybe you already have an account under this email."
-            }
+    pwd = utils.hash_password(password)
+    try:
+        query("INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
+                                        (fullname, email, pwd, ifaorishaname, stripe_customer.id))
+        return {'success': "New Account Created"}
+    except psycopg2.IntegrityError as e:
+        stripe.Customer.delete(stripe_customer.id)
+        return {
+            "error":"Something went wrong.",
+            "message": str(e),
+            "description": "Maybe you already have an account under this email."
+        }
 
 @cmdline
 def set_user_password(email, password):
@@ -96,28 +91,24 @@ def set_user_password(email, password):
     password: New password
     """
     email = email.lower()
-    with _conn, _conn.cursor() as cur:
-        pwd = utils.hash_password(password)
-        cur.execute("SELECT id FROM users WHERE email=%s", (email, ),)
-        rows=cur.fetchall()
-        if not rows:
-            print("No such user")
-        else:
-            cur.execute("update users set password=%s where id=%s", (pwd, rows[0][0]))
+    pwd = utils.hash_password(password)
+    rows=query("SELECT id FROM users WHERE email=%s", (email, ),)
+    if not rows:
+        print("No such user")
+    else:
+        query("update users set password=%s where id=%s", (pwd, rows[0][0]))
 
 @cmdline
 def delete_user(email, fullname):
     """
     Remove a user by identified by email and fullname
     """
-    with _conn, _conn.cursor() as cur:
-        cur.execute("DELETE FROM users WHERE email=%s and fullname = %s RETURNING id", (email, fullname,),)
-        rows=cur.fetchall()
-        if not rows:
-            return "No such user"
-        else:
-            print(rows[0])
-            return "User Deleted"
+    rows=query("DELETE FROM users WHERE email=%s and fullname = %s RETURNING id", (email, fullname,),)
+    if not rows:
+        return "No such user"
+    else:
+        print(rows[0])
+        return "User Deleted"
 
 @cmdline
 def tables(*, confirm=False):
@@ -126,15 +117,14 @@ def tables(*, confirm=False):
     confirm: If omitted, will do a dry run.
     """
     tb = None; cols = {}; coldefs = []
-    with _conn, _conn.cursor() as cur:
-        def finish():
-            if tb and (coldefs or cols):
-                if is_new == "": query = "create table "+tb+" ("+", ".join(coldefs)+")"
-                else:
-                    parts = coldefs + ["drop "+c for c in cols]
-                    query = "alter table "+tb+" "+", ".join(parts)
-                if confirm: cur.execute(query)
-                else: print(query)
+    def finish():
+        if tb and (coldefs or cols):
+            if is_new == "": query_string = "create table "+tb+" ("+", ".join(coldefs)+")"
+            else:
+                parts = coldefs + ["drop "+c for c in cols]
+                query_string = "alter table "+tb+" "+", ".join(parts)
+            if confirm: query(query_string)
+            else: print(query_string)
 
         for line in open("create_table.sql"):
             line = line.rstrip()
@@ -143,8 +133,8 @@ def tables(*, confirm=False):
             if line == line.lstrip():
                 finish()
                 tb = line; coldefs = []
-                cur.execute("select column_name, data_type from information_schema.columns where table_name=%s", (tb,))
-                cols = {row[0]:row[1] for row in cur}
+                rows = query("select column_name, data_type from information_schema.columns where table_name=%s", (tb,))
+                cols = {row[0]:row[1] for row in rows}
                 # New tables want a series of column definitions; altered tables want any added
                 # columns prefixed with the command "add".
                 is_new = "add" if cols else ""

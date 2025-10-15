@@ -6,15 +6,12 @@ import logging
 import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
-import manage
+from database import query, dict_query
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-DATABASE_URL = os.environ["DATABASE_URL"]
-
-_conn = psycopg2.connect(DATABASE_URL)
 
 admin = Blueprint('admin', __name__)
 
@@ -39,10 +36,7 @@ def index():
 
 @admin.route("/library")
 def library():
-    with _conn, _conn.cursor() as cur:
-        cur.execute("SELECT title, description, filename, minimum_grade, active FROM library_content")
-        library_content = cur.fetchall()
-        print(library_content)
+    library_content = query("SELECT title, description, filename, minimum_grade, active FROM library_content")
     return render_template("library_admin.html", user=current_user, library_content=library_content)
 
 
@@ -59,8 +53,7 @@ def new_library_document():
     if doc.filename == '':
         flash('No selected file')
         return redirect(request.url, 303)
-    with _conn, _conn.cursor() as cur:
-        cur.execute("""
+    id = query("""
             INSERT INTO library_content
                 (title, description, filename, filecontent, active, minimum_grade)
             VALUES (%s, %s, %s, %s, true, %s) returning id
@@ -70,16 +63,13 @@ def new_library_document():
             doc.filename,
             doc.read(),
             request.form["minimum_grade"],
-        ))
-        id = cur.fetchone()[0]
+        ))[0][0]
     flash('Succesfully uploaded %s' % request.form["title"])
     return redirect(request.url, 303)
 
 @admin.route("/users")
 def user_listing():
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("SELECT * FROM users ORDER BY user_level")
-        users = cur.fetchall()
+    users = dict_query("SELECT * FROM users ORDER BY user_level")
     return render_template("user_admin.html", user=current_user, users=users)
 
 @admin.route("/users", methods=["post"])
@@ -90,6 +80,5 @@ def user_update():
             fields.append(field + " = %s")
             params.append(request.form[field])
     params.append(request.form["userid"])
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("UPDATE users SET " + ", ".join(fields) + " WHERE id = %s", params)
+    dict_query("UPDATE users SET " + ", ".join(fields) + " WHERE id = %s", params)
     return redirect("/admin/users"), 303

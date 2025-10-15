@@ -28,8 +28,6 @@ from payment import payment
 from student import student
 from admin import admin
 
-_conn = psycopg2.connect(os.environ["DATABASE_URL"])
-
 # The library needs to be configured with your account's secret key.
 # Ensure the key is kept out of any version control system you might be using.
 stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
