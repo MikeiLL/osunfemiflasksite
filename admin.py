@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, redirect, flash
+from flask import Blueprint, jsonify, request, render_template, redirect, flash, make_response
 from flask_login import LoginManager, current_user, login_user
 import stripe
 import os
@@ -36,7 +36,7 @@ def index():
 
 @admin.route("/library")
 def library():
-    library_content = query("SELECT title, description, filename, minimum_grade, active FROM library_content")
+    library_content = dict_query("SELECT id, title, description, filename, minimum_grade, active FROM library_content")
     return render_template("library_admin.html", user=current_user, library_content=library_content)
 
 
@@ -82,3 +82,14 @@ def user_update():
     params.append(request.form["userid"])
     dict_query("UPDATE users SET " + ", ".join(fields) + " WHERE id = %s", params)
     return redirect("/admin/users"), 303
+
+@admin.route('/docs/<id>')
+def get_pdf(id):
+    binary_pdf = query("SELECT filecontent FROM library_content", (id,))[0]
+    if binary_pdf:
+        response = make_response(bytes(binary_pdf[0]))
+        response.headers['Content-Type'] = 'application/pdf'
+        #response.headers['Content-Disposition'] = 'inline; filename=%s.pdf' % 'yourfilename' (for download)
+    else:
+        return render_template("400_generic.html", user=current_user, e="Whoops the file you were looking for doesn't seem to exist."), 404
+    return response

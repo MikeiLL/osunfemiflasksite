@@ -14,9 +14,25 @@
     </ul>
     {% endif %}
     {% endwith %}
-    <pre>
-      {{library_content}}
-    </pre>
+    <h2>Library</h2>
+    {% if not library_content %}
+    <p> No classes yet. Add some below.</p>
+    {% else %}
+    <ul>
+      {% for doc in library_content %}
+      <li>
+        <a href="docs/{{doc.id}}" title="{{doc.description}}">
+          <div class="libraryitem">
+            <h3>{{ doc.title }}</h3>
+            <p>{{doc.description}}</p>
+            <p>{{doc.filename}}</p>
+            <p>{{doc.minimum_grade}}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
     <form method="post" enctype="multipart/form-data">
       <fieldset>
         <legend>New Document</legend>
