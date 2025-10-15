@@ -82,7 +82,15 @@ on("submit", "form#login", async (e) => {
     set_content("dialog#main #alertmessages", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
   } else {
     if (PURCHASE.price_id) make_transaction(PURCHASE);
-    DOM("dialog#main").close();
+    let actionmsg = result.user_level && result.grade_level >= 1 ? "Let's go to your dashboard..." : "Make a purchase or subscription below";
+    set_content("dialog#main section", `Welcome back, ${result.ifaorishaname || result.fullname}. ${actionmsg}`);
+    setTimeout(() => {
+      if (result.user_level > 1) return window.location = "/admin";
+      if (result.user_level <= 1) {
+        if (result.grade_level < 1) return window.location = "/";
+        return window.location = "/student";
+      };
+    }, 1000);
   }
 })
 function signup(e) {
