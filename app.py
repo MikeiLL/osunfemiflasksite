@@ -19,15 +19,14 @@ import stripe
 from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from payment import payment
-from student import student
-from admin import admin
 import manage
 import psycopg2
 from dotenv import load_dotenv
-import time
 
 load_dotenv()
+from payment import payment
+from student import student
+from admin import admin
 
 _conn = psycopg2.connect(os.environ["DATABASE_URL"])
 
@@ -100,9 +99,10 @@ def login_post():
     else:
         return jsonify({'error': "Invalid email or password"})
 
-@app.route("/success")
-def success():
-    return render_template("success.html")
+@app.route("/cancel")
+def cancel():
+    flash('Purchase not completed.')
+    return redirect("/")
 
 if __name__ == "__main__":
     # # If we're running with gunicorn, we need to start the websocket server
