@@ -5,6 +5,10 @@
 {% block main %}
 <div class="main">
   <section>
+    <h2>Your Library</h2>
+    {% if not mylibrary %}
+    <p> No classes yet. Purchase or subscribe <a href="/" title="home">here</a>.</p>
+    {% else %}
     <ul>
       {% for doc in mylibrary %}
       <li>
@@ -17,6 +21,7 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   </section>
 </div>
 {% endblock %}
