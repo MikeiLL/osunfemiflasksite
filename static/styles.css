@@ -1,0 +1,18 @@
+.flexrow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1em;
+}
+
+ul.cards {
+  list-style: none;
+}
+
+ul.cards li {
+  background-color: lightblue;
+  border-radius: 5px;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+}

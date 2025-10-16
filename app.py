@@ -58,12 +58,14 @@ app.register_blueprint(admin, url_prefix="/admin")
 
 @app.route("/")
 def index():
-    products = [p for p in stripe.Product.list() if p['active']]
+    items = [p for p in stripe.Product.list() if p['active']]
     prices = {p["product"]: p for p in stripe.Price.list()}
     # mutate the product to add the price
-    for p in products:
+    for p in items:
          p["price"] = prices.get(p["id"])
-    return render_template("index.html", products=products, user=current_user)
+    subscriptions = [item for item in items if item.price.recurring]
+    purchases = [item for item in items if not item.price.recurring]
+    return render_template("index.html", subscriptions=subscriptions, purchases=purchases, user=current_user)
 
 
 @app.route("/login")
