@@ -23,5 +23,22 @@
     </ul>
     {% endif %}
   </section>
+  <section>
+    <h2>Your Subscriptions</h2>
+    {% if not student_subscriptions %}
+    <p> No subscription yet. Subscribe <a href="/" title="home">here</a>.</p>
+    {% else %}
+    <ul>
+      {% for sub in student_subscriptions %}
+      <li>
+        <div class="subscriptionitem">
+          <h3>{{ sub.created }}</h3>
+          <p>{{sub.amount}}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
 </div>
 {% endblock %}

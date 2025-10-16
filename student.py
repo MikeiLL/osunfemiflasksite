@@ -5,8 +5,12 @@ import os
 import logging
 import psycopg2
 import psycopg2.extras
+import time
+import locale
 from dotenv import load_dotenv
 from database import query, dict_query
+
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,14 +41,25 @@ def library():
     #stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     MAX_GRADE = 6
     user_grade = current_user.grade_level
+    subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+    student_subscriptions = []
+    for sub in subscriptions.data:
+        student_subscriptions.append({
+            "created": time.ctime(sub.created),
+            "current_period_start": time.ctime(sub.current_period_start),
+            "current_period_end": time.ctime(sub.current_period_end),
+            "active": "active" if sub.plan.active else "expired",
+            "amount": locale.currency(sub.plan.amount / 100),
+            "interval": sub.plan.interval,
+            "interval_count": sub.plan.interval_count,
+        })
     if user_grade < MAX_GRADE:
-        subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
         if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
     mylibrary = dict_query("""
         SELECT * FROM library_content
         WHERE active = true AND minimum_grade <= %s
     """, (user_grade,))
-    return render_template("student.html", user=current_user, mylibrary=mylibrary)
+    return render_template("student.html", user=current_user, mylibrary=mylibrary, student_subscriptions=student_subscriptions)
 
 @student.route('/docs/<id>')
 def get_pdf(id):
