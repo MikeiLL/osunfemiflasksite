@@ -85,9 +85,10 @@ def user_update():
 
 @admin.route("/users", methods=["delete"])
 def user_delete():
-    print(request.data)
-    dict_query("DELETE FROM users WHERE id = %s", )
-    return jsonify({"message": "user deleted"})
+    data = request.json
+    user_id = data['user_id']
+    query("DELETE FROM users WHERE id = %s", (user_id,))
+    return jsonify({"message": "user deleted " + user_id})
 
 @admin.route('/docs/<id>')
 def get_pdf(id):

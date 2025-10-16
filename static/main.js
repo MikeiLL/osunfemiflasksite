@@ -140,11 +140,13 @@ on("click", "button.useredit", (e) => {
   ])}
   ))
 })
-on("click", "button.userremove", async (e) => {
+on("click", "button.userremove", simpleconfirm("Delete user?", async (e) => {
   let row = e.match.closest("tr");
-  let response = await fetch("/users", {
+  let response = await fetch("/admin/users", {
     method: "DELETE",
+    headers: {"content-type": "application/json"},
     body: JSON.stringify({"user_id": row.id.replace("user_", "")}),
   });
   let result = await response.json();
-})
+  window.location.reload();
+}));
