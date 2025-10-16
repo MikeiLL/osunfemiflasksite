@@ -27,30 +27,32 @@
 <body>
   <header role="banner">
     <div id="branding_nav">
-      <div class="branding">
-        <a href="/">BRANDING</a>
+      <div class="topbar">
+        <a href="/">Osun's Golden Harvest Temple of Love and Light</a>
+        <div class="user">
+          {% if user.fullname %}
+          Logged in as {{ user.fullname }} <a class="btn" href="/logout">Logout</a>
+          {% else %}
+          Not logged in
+          {% endif %}
+        </div>
       </div>
-      <nav>
-        <ul>
-          {% if user.user_level %}
-          {% if user.user_level == 3 %}
-          <li><a href="/">YOU are an admin</a></li>
-          {% else %}
-          <li><a href="/">YOU are level {{user.user_level}}</a></li>
-          {% endif %}
-          {% else %}
-          <button type=button id="loginbutton">Login</button>
-          {% endif %}
-        </ul>
-      </nav>
     </div>
-    <div class="user">
-      {% if user.fullname %}
-      Logged in as {{ user.fullname }} <a class="btn" href="/logout">Logout</a>
-      {% else %}
-      Not logged in
-      {% endif %}
-    </div>
+    <nav>
+      <ul>
+        {% if user.user_level %}
+        {% if user.user_level == 2 %}
+        <li><a href="/admin/users">Users</a></li>
+        <li><a href="/admin/library">Library</a></li>
+        <li><a href="/student">Your Student Dashboard</a></li>
+        {% else %}
+        <li><a href="/student">Dashboard</a></li>
+        {% endif %}
+        {% else %}
+        <button type=button id="loginbutton">Login</button>
+        {% endif %}
+      </ul>
+    </nav>
   </header>
   <br style="clear:both">
   {% block main %}

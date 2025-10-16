@@ -22,3 +22,33 @@ ul.cards li img {
   max-width: 150px;
   height: auto;
 }
+
+body>header {
+  display: flex;
+  flex-direction: column;
+  background: gold;
+  color: black;
+  padding: 1em 0.5em 0;
+}
+
+.topbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+body>header a {
+  color: grey;
+}
+
+body>header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+body>header nav li {
+  padding: 0.4em;
+  border: 1px solid grey;
+}
