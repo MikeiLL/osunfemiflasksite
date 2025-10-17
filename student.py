@@ -36,15 +36,24 @@ stripe.api_key = stripe_keys["secret_key"]
 
 # TODO look into https://docs.stripe.com/api/customer_portal/sessions
 
+@student.route("/cancel", methods=["post"])
+def cancel_subscription():
+    data = request.json()
+    subscription_id = data['subscription_id']
+    cancellation = stripe.Subscription.cancel(subscription_id)
+    return jsonify({"message": "subscription cancelled"})
+
 @student.route("/")
 def library():
     #stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     MAX_GRADE = 6
     user_grade = current_user.grade_level
     subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+    # other options are cancelled, ended and all.
     student_subscriptions = []
     for sub in subscriptions.data:
         student_subscriptions.append({
+            "id": sub.id,
             "created": time.ctime(sub.created),
             "current_period_start": time.ctime(sub.current_period_start),
             "current_period_end": time.ctime(sub.current_period_end),
