@@ -96,6 +96,18 @@ Index
 }
 
 /*
+HEADINGS
+*/
+main>h1,
+main>h2,
+main>h3,
+main>h4 {
+  width: 100%;
+  text-align: center;
+}
+
+
+/*
 BUTTONS
 */
 button {

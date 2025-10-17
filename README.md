@@ -31,6 +31,8 @@ https://github.com/duplxey/flask-stripe-subscriptions/blob/master/app.py
 - - set grade level (1-8)
 ### Mail handling
 
+### Image Magick Thumbnail Classes
+magick ../Ifa\ Classes/Sept2025/PDF\ Files/Class8.pdf[0] class_eight_thumbnail.png
 
 ### Heroku
 `heroku addons --help`

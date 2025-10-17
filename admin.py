@@ -50,9 +50,13 @@ def library():
 def new_library_document():
     # check if the post request has the file part
     if 'document' not in request.files:
-        flash('No file part')
+        flash('No file part for PDF')
+        return redirect(request.url, 303)
+    if 'thumbnail' not in request.files:
+        flash('No file part for thumbnail')
         return redirect(request.url, 303)
     doc = request.files['document']
+    thumb = request.files['thumbnail']
     # If the user does not select a file, the browser submits an
     # empty file without a filename.
     if doc.filename == '':
@@ -60,13 +64,14 @@ def new_library_document():
         return redirect(request.url, 303)
     id = query("""
             INSERT INTO library_content
-                (title, description, filename, filecontent, active, minimum_grade)
-            VALUES (%s, %s, %s, %s, true, %s) returning id
+                (title, description, filename, filecontent, thumbnail, active, minimum_grade)
+            VALUES (%s, %s, %s, %s, %s, true, %s) returning id
         """, (
             request.form["title"],
             request.form["description"],
             doc.filename,
             doc.read(),
+            thumb.read(),
             request.form["minimum_grade"],
         ))[0][0]
     flash('Succesfully uploaded %s' % request.form["title"])

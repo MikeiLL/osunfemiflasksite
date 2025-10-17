@@ -26,5 +26,6 @@ library_content
   description varchar not null default ''
   filename varchar not null
   filecontent bytea not null
+  thumbnail bytea
   active boolean not null default true
   minimum_grade int references grade_levels
