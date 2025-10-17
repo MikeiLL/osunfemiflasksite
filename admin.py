@@ -41,7 +41,9 @@ def index():
 
 @admin.route("/library")
 def library():
-    library_content = dict_query("SELECT id, title, description, filename, minimum_grade, active FROM library_content ORDER BY minimum_grade, filename")
+    library_content = dict_query("""SELECT id, title, description, filename, minimum_grade, active
+                                 FROM library_content
+                                 ORDER BY minimum_grade, filename""")
     return render_template("library_admin.html", user=current_user, library_content=library_content)
 
 
@@ -117,3 +119,13 @@ def get_pdf(id):
     else:
         return render_template("400_generic.html", user=current_user, e="Whoops the file you were looking for doesn't seem to exist."), 404
     return response
+
+@admin.route('/thumbs/<id>')
+def get_thumbnail(id):
+        binary_thumbnail = query("SELECT thumbnail FROM library_content WHERE id = %s", (id,))[0]
+        if binary_thumbnail:
+            response = make_response(bytes(binary_thumbnail[0]))
+            response.headers['Content-Type'] = 'image.png'
+        else:
+            return render_template("400_generic.html", user=current_user, e="File not found"), 404
+        return response

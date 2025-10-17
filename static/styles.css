@@ -154,20 +154,34 @@ ul.subscription_list li p span {
 ADMIN
 */
 ul#admin_library_content {
+  display: flex;
+  flex-wrap: wrap;
   list-style: none;
   padding-left: 0;
+  align-items: center;
 }
 
 ul#admin_library_content li .libraryitem {
   padding: 1em;
   border: 1px solid var(--grey);
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-ul#admin_library_content li .libraryitem .details {
+ul#admin_library_content li .libraryitem figure {
   display: flex;
-  flex-direction: row;
-  gap: 1em;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--lightgrey);
+  border-radius: 5px;
+}
+
+ul#admin_library_content li .libraryitem figure figcaption {
+  background-color: var(--lightgrey);
+  width: 100%;
+  padding: 0.5em 2em;
 }
 
 table.user_admin td {

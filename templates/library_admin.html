@@ -22,14 +22,16 @@
     <li>
       <div class="libraryitem">
         <h3>{{ doc.title }}</h3>
-        <div class="details">
-          <p>{{doc.description}}</p>
-          <p>Filename: {{doc.filename}}</p>
-          <p>Minimum grade: {{doc.minimum_grade}}</p>
-          <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view file</a></p>
-          <button type="button">edit (todo)</button>
-          <button type="button" class="documentremove" id="document_{{doc.id}}">delete</button>
-        </div>
+        <p>{{doc.description}}</p>
+        <figure class="details">
+          <img src="/admin/thumbs/{{doc.id}}" height="450" alt="thumbnail image">
+          <figcaption>
+            <p>Filename: {{doc.filename}}</p>
+            <p>Minimum grade: {{doc.minimum_grade}}</p>
+            <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view pdf</a></p>
+          </figcaption>
+        </figure>
+        <button type="button" class="documentremove" id="document_{{doc.id}}">delete</button>
       </div>
     </li>
     {% endfor %}
