@@ -41,7 +41,7 @@ def index():
 
 @admin.route("/library")
 def library():
-    library_content = dict_query("SELECT id, title, description, filename, minimum_grade, active FROM library_content")
+    library_content = dict_query("SELECT id, title, description, filename, minimum_grade, active FROM library_content ORDER BY minimum_grade, filename")
     return render_template("library_admin.html", user=current_user, library_content=library_content)
 
 
@@ -99,6 +99,13 @@ def user_delete():
     user_id = data['user_id']
     query("DELETE FROM users WHERE id = %s", (user_id,))
     return jsonify({"message": "user deleted " + user_id})
+
+@admin.route("/docs", methods=["delete"])
+def document_delete():
+    data = request.json
+    document_id = data['document_id']
+    query("DELETE FROM library_content WHERE id = %s", (document_id,))
+    return jsonify({"message": "document deleted " + document_id})
 
 @admin.route('/docs/<id>')
 def get_pdf(id):

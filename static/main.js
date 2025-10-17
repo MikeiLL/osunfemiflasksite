@@ -158,3 +158,12 @@ on("click", "button.userremove", simpleconfirm("Delete user?", async (e) => {
   let result = await response.json();
   window.location.reload();
 }));
+on("click", "button.documentremove", simpleconfirm("Delete document?", async (e) => {
+  let response = await fetch("/admin/docs", {
+    method: "DELETE",
+    headers: {"content-type": "application/json"},
+    body: JSON.stringify({"document_id": e.match.id.replace("document_", "")}),
+  });
+  let result = await response.json();
+  window.location.reload();
+}));
