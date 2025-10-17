@@ -3,45 +3,43 @@
 {% block title %}Library administration{% endblock %}
 
 {% block main %}
-<div class="main">
-  <section>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    <form id="usereditform" method="post">
-      <table class="user_admin">
-        <thead>
-          <tr>
-            <td>Ifa/Orisha Name</td>
-            <td>Full Name</td>
-            <td>Grade Level</td>
-            <td>User Level</td>
-            <td>Email</td>
-            <td></td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          {% for u in users %}
-          <tr id="user_{{u.id}}">
-            <td data-name="ifaorishaname" class="text">{{u.ifaorishaname}}</td>
-            <td data-name="fullname" class="text">{{u.fullname}}</td>
-            <td data-name="grade_level" class="number">{{u.grade_level}}</td>
-            <td data-name="user_level" class="number">{{u.user_level}}</td>
-            <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
-            <td class="useredit"><button type=button class="useredit" title="edit user">edit user</button></td>
-            <td class="userremove"><button type=button class="userremove" title="edit user">remove</button></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </form>
-  </section>
-</div>
+<section>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  <form id="usereditform" method="post">
+    <table class="user_admin">
+      <thead>
+        <tr>
+          <td>Ifa/Orisha Name</td>
+          <td>Full Name</td>
+          <td>Grade Level</td>
+          <td>User Level</td>
+          <td>Email</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr id="user_{{u.id}}">
+          <td data-name="ifaorishaname" class="text">{{u.ifaorishaname}}</td>
+          <td data-name="fullname" class="text">{{u.fullname}}</td>
+          <td data-name="grade_level" class="number">{{u.grade_level}}</td>
+          <td data-name="user_level" class="number">{{u.user_level}}</td>
+          <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
+          <td class="useredit"><button type=button class="useredit" title="edit user">edit user</button></td>
+          <td class="userremove"><button type=button class="userremove" title="edit user">remove</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+</section>
 {% endblock %}

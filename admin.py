@@ -5,6 +5,7 @@ import os
 import logging
 import psycopg2
 import psycopg2.extras
+from datetime import datetime
 from dotenv import load_dotenv
 from database import query, dict_query
 
@@ -14,6 +15,10 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 admin = Blueprint('admin', __name__)
+
+@admin.context_processor
+def inject_date():
+    return dict(year=datetime.now().year)
 
 @admin.before_request
 def restrict_bp_to_admins():

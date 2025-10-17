@@ -3,48 +3,46 @@
 {% block title %}Logi Page{% endblock %}
 
 {% block main %}
-<div class="main">
-  <section>
-    <h2>Your Library</h2>
-    {% if not mylibrary %}
-    <p> No classes yet. Purchase or subscribe <a href="/" title="home">here</a>.</p>
-    {% else %}
-    <ul class="class_list">
-      {% for doc in mylibrary %}
-      <li>
-        <a href="docs/{{doc.id}}" title="{{doc.description}}">
-          <div class="libraryitem">
-            <h3>{{ doc.title }}</h3>
-            <p>{{doc.description}}</p>
-          </div>
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </section>
-  <section>
-    <h2>Your Subscriptions</h2>
-    {% if not student_subscriptions %}
-    <p> No subscription yet. Subscribe <a href="/" title="home">here</a>.</p>
-    {% else %}
-    <ul class="subscription_list">
-      {% for sub in student_subscriptions %}
-      <li>
-        <div class="subscriptionitem {{sub.active}}">
-          <h3>{{ sub.product_name }}</h3>
-          <h4>{{sub.amount}}</h4>
-          <p>Since {{ sub.created }} <span>(renews {{sub.current_period_end}})</span></p>
-          {% if sub.status == 'active' %}
-          <button id="cancel_{{sub.id}}" class="subscription_cancel">Cancel</button>
-          {% else %}
-          <button id="resume_{{sub.id}}" class="subscription_resume">Resume</button>
-          {% endif %}
+<section>
+  <h2>Your Library</h2>
+  {% if not mylibrary %}
+  <p> No classes yet. Purchase or subscribe <a href="/" title="home">here</a>.</p>
+  {% else %}
+  <ul class="class_list">
+    {% for doc in mylibrary %}
+    <li>
+      <a href="docs/{{doc.id}}" title="{{doc.description}}">
+        <div class="libraryitem">
+          <h3>{{ doc.title }}</h3>
+          <p>{{doc.description}}</p>
         </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </section>
-</div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+<section>
+  <h2>Your Subscriptions</h2>
+  {% if not student_subscriptions %}
+  <p> No subscription yet. Subscribe <a href="/" title="home">here</a>.</p>
+  {% else %}
+  <ul class="subscription_list">
+    {% for sub in student_subscriptions %}
+    <li>
+      <div class="subscriptionitem {{sub.active}}">
+        <h3>{{ sub.product_name }}</h3>
+        <h4>{{sub.amount}}</h4>
+        <p>Since {{ sub.created }} <span>(renews {{sub.current_period_end}})</span></p>
+        {% if sub.status == 'active' %}
+        <button id="cancel_{{sub.id}}" class="subscription_cancel">Cancel</button>
+        {% else %}
+        <button id="resume_{{sub.id}}" class="subscription_resume">Resume</button>
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
 {% endblock %}

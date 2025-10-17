@@ -55,16 +55,17 @@
     </nav>
   </header>
   <br style="clear:both">
-  {% block main %}
   <main>
+    {% block main %}
     <section id="pattern" class="pattern">
       A section of the screen
     </section>
+    {% endblock %}
   </main>
-  {% endblock %}
   {% block footer %}
-  <footer>
-    <h3>I'm in the footer</h3>
+  <footer aria-label="footer">
+    <h3>&copy; {{year}} Osun's Golden Harvest Temple of Love and Light, Pensacola, Florida (Gulf Coast, USA)</h3>
+    <h4>contact: osunfemi@gmail.com</h4>
   </footer>
   {% endblock %}
   <dialog id=main>

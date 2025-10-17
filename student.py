@@ -20,6 +20,10 @@ load_dotenv()
 
 student = Blueprint('student', __name__)
 
+@student.context_processor
+def inject_date():
+    return dict(year=datetime.now().year)
+
 @student.before_request
 def restrict_bp_to_students():
     if not (current_user and hasattr(current_user, 'user_level') and current_user.user_level >= 1):

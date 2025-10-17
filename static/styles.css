@@ -5,10 +5,18 @@
 :root {
   --brandprimary: goldenrod;
   --brandprimarylight: gold;
-  --black: rgb(41, 41, 40);
+  --black: rgb(61, 61, 59);
   --white: rgb(246, 245, 207);
   --lightgrey: lightgrey;
   --grey: grey;
+}
+
+main {
+  min-height: 70vh;
+}
+
+body {
+  color: var(--black);
 }
 
 .flexrow {
@@ -44,6 +52,13 @@ body>header {
   padding: 1em 0.5em 0;
 }
 
+body>footer {
+  padding: 1em;
+  background: var(--brandprimarylight);
+  color: var(--black);
+  text-align: center;
+}
+
 .topbar {
   display: flex;
   width: 100%;
@@ -64,6 +79,20 @@ body>header nav ul {
 body>header nav li {
   padding: 0.4em;
   border: 1px solid grey;
+}
+
+/*
+Index
+*/
+.index.flexrow div {
+  flex: 1;
+}
+
+.index.flexrow img {
+  width: 400px;
+  max-width: 90vw;
+  height: auto;
+  border-radius: 10px;
 }
 
 /*
@@ -126,4 +155,10 @@ table.user_admin td {
 table.user_admin thead {
   background-color: var(--lightgrey);
   font-weight: bold;
+}
+
+@media screen and (min-width: 1024px) {
+  p {
+    font-size: 1.2em;
+  }
 }

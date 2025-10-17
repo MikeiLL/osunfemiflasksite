@@ -15,6 +15,7 @@
 import json
 import os
 import stripe
+from datetime import datetime
 
 from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
@@ -55,6 +56,10 @@ def load_user(id):
 app.register_blueprint(payment, url_prefix="/payment")
 app.register_blueprint(student, url_prefix="/student")
 app.register_blueprint(admin, url_prefix="/admin")
+
+@app.context_processor
+def inject_date():
+    return dict(year=datetime.now().year)
 
 @app.route("/")
 def index():
