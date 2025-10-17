@@ -21,13 +21,13 @@
   <img src="/static/images/Iya_Osunfemi_Ruth_Spears.jpg" alt="Iya Osunfemi/Ruth Spears">
 </div>
 {% endwith %}
-<h2>Single and Package Classes</h2>
+<h2>Readings, Single and Package Classes</h2>
 <ul id="purchases" class="flexrow cards">
   {% for purchase in purchases %}
   <li>
     <h3>{{ purchase.name }}</h3>
     {% if purchase.description %}
-    {{ purchase.description }}
+    <p>{{ purchase.description }}</p>
     {% endif %}
     {% if purchase.images[0] %}
     <img src="{{ purchase.images[0] }}" alt="{{ purchase.name }}">
@@ -38,13 +38,13 @@
   </li>
   {% endfor %}
 </ul>
-<h2>Subscriptions</h2>
+<h2>Subscriptions (Tithes)</h2>
 <ul id="subscriptions" class="flexrow cards">
   {% for sub in subscriptions %}
   <li>
     <h3>{{ sub.name }}</h3>
-    {% if sub.description %}
-    {{ sub.description }}
+    <p>{% if sub.description %}</p>
+    <p>{{ sub.description }}</p>
     {% endif %}
     {% if sub.images[0] %}
     <img src="{{ sub.images[0] }}" alt="{{ sub.name }}">
@@ -52,6 +52,7 @@
     <p>${{sub.price['unit_amount'] // 100}} per {{sub.price['recurring']['interval']}}</p>
     <button type=button class=transaction id="{{sub.price['id']}}" data-recurring=true
       data-loggedin="{{user.stripe_customer_id}}">Subscribe</button>
+    <p>(pause or cancel anytime)</p>
   </li>
   {% endfor %}
 </ul>
