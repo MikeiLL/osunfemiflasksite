@@ -6,6 +6,7 @@ import logging
 import psycopg2
 import psycopg2.extras
 import time
+from datetime import date, datetime
 import locale
 from dotenv import load_dotenv
 from database import query, dict_query
@@ -48,20 +49,25 @@ def library():
     #stripecustomer = stripe.Customer.retrieve(current_user.stripe_customer_id)
     MAX_GRADE = 6
     user_grade = current_user.grade_level
-    subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
-    # other options are cancelled, ended and all.
+    subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="all")
+    # other options are cancelled,
+    # ended (subscriptions that are canceled and subscriptions that are expired due to incomplete payment)
+    # and all.
     student_subscriptions = []
     for sub in subscriptions.data:
+        product = stripe.Product.retrieve(sub.plan.product)
         student_subscriptions.append({
             "id": sub.id,
-            "created": time.ctime(sub.created),
-            "current_period_start": time.ctime(sub.current_period_start),
-            "current_period_end": time.ctime(sub.current_period_end),
-            "active": "active" if sub.plan.active else "expired",
+            "created": datetime.fromtimestamp(sub.created).strftime('%d %b, %Y'),
+            #"current_period_start": date.fromtimestamp(sub.current_period_start).strftime('%d %b, %Y'),
+            "current_period_end": date.fromtimestamp(sub.current_period_end).strftime('%d %b, %Y'),
+            "status": "active" if sub.plan.active else "expired",
             "amount": locale.currency(sub.plan.amount / 100),
             "interval": sub.plan.interval,
             "interval_count": sub.plan.interval_count,
+            "product_name": product.name,
         })
+    print(student_subscriptions)
     if user_grade < MAX_GRADE:
         if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
     mylibrary = dict_query("""

@@ -126,12 +126,20 @@ on("submit", "form#signup", async (e) => {
     set_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
   }
 });
+
+on("click", "button.cancel_user_edit", (e) => { window.location.reload()})
 on("click", "button.useredit", (e) => {
   let row = e.match.closest("tr");
   set_content(row, [...row.querySelectorAll("td")].map(c => {
-    if (c.className == "button") {
-      return TD([
+    if (c.className == "useredit") {
+      return TD({cellspan: 2},[
         BUTTON({type: "submit"}, "Submit"),
+        INPUT({type: "hidden", value: row.id.replace("user_", ""), name: "userid"})
+      ])
+    }
+    if (c.className == "userremove") {
+      return TD({cellspan: 2},[
+        BUTTON({type: "button", class: "cancel_user_edit"}, "Cancel"),
         INPUT({type: "hidden", value: row.id.replace("user_", ""), name: "userid"})
       ])
     }

@@ -9,7 +9,7 @@
     {% if not mylibrary %}
     <p> No classes yet. Purchase or subscribe <a href="/" title="home">here</a>.</p>
     {% else %}
-    <ul>
+    <ul class="class_list">
       {% for doc in mylibrary %}
       <li>
         <a href="docs/{{doc.id}}" title="{{doc.description}}">
@@ -28,13 +28,18 @@
     {% if not student_subscriptions %}
     <p> No subscription yet. Subscribe <a href="/" title="home">here</a>.</p>
     {% else %}
-    <ul>
+    <ul class="subscription_list">
       {% for sub in student_subscriptions %}
       <li>
-        <div class="subscriptionitem">
-          <h3>{{ sub.created }}</h3>
-          <p>{{sub.amount}}</p>
+        <div class="subscriptionitem {{sub.active}}">
+          <h3>{{ sub.product_name }}</h3>
+          <h4>{{sub.amount}}</h4>
+          <p>Since {{ sub.created }} <span>(renews {{sub.current_period_end}})</span></p>
+          {% if sub.status == 'active' %}
           <button id="cancel_{{sub.id}}" class="subscription_cancel">Cancel</button>
+          {% else %}
+          <button id="resume_{{sub.id}}" class="subscription_resume">Resume</button>
+          {% endif %}
         </div>
       </li>
       {% endfor %}

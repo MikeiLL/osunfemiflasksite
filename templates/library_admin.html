@@ -18,17 +18,20 @@
     {% if not library_content %}
     <p> No classes yet. Add some below.</p>
     {% else %}
-    <ul>
+    <ul id="admin_library_content">
       {% for doc in library_content %}
       <li>
-        <a href="docs/{{doc.id}}" title="{{doc.description}}">
-          <div class="libraryitem">
-            <h3>{{ doc.title }}</h3>
+        <div class="libraryitem">
+          <h3>{{ doc.title }}</h3>
+          <div class="details">
             <p>{{doc.description}}</p>
-            <p>{{doc.filename}}</p>
-            <p>{{doc.minimum_grade}}</p>
+            <p>Filename: {{doc.filename}}</p>
+            <p>Minimum grade: {{doc.minimum_grade}}</p>
+            <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view file</a></p>
+            <button type="button">edit (todo)</button>
+            <button type="button">delete (todo) archive?</button>
           </div>
-        </a>
+        </div>
       </li>
       {% endfor %}
     </ul>

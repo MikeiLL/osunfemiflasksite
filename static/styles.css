@@ -1,3 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --brandprimary: goldenrod;
+  --brandprimarylight: gold;
+  --black: rgb(41, 41, 40);
+  --white: rgb(246, 245, 207);
+  --lightgrey: lightgrey;
+  --grey: grey;
+}
+
 .flexrow {
   display: flex;
   flex-wrap: wrap;
@@ -26,8 +39,8 @@ ul.cards li img {
 body>header {
   display: flex;
   flex-direction: column;
-  background: gold;
-  color: black;
+  background: var(--brandprimarylight);
+  color: var(--black);
   padding: 1em 0.5em 0;
 }
 
@@ -51,4 +64,66 @@ body>header nav ul {
 body>header nav li {
   padding: 0.4em;
   border: 1px solid grey;
+}
+
+/*
+BUTTONS
+*/
+button {
+  padding: 0.5em;
+  border: none;
+  border-radius: 2px;
+  background-color: var(--brandprimarylight);
+}
+
+/*
+Dashboard
+*/
+ul.subscription_list,
+ul.class_list {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.subscription_list li,
+ul.class_list li {
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+  border: 1px solid var(--lightgrey);
+  border-radius: 5px;
+}
+
+ul.subscription_list li p span {
+  color: var(--grey)
+}
+
+/*
+ADMIN
+*/
+ul#admin_library_content {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul#admin_library_content li .libraryitem {
+  padding: 1em;
+  border: 1px solid var(--grey);
+  border-radius: 5px;
+}
+
+ul#admin_library_content li .libraryitem .details {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+
+table.user_admin td {
+  padding: 0.3em;
+  border: 1px solid var(--grey);
+}
+
+table.user_admin thead {
+  background-color: var(--lightgrey);
+  font-weight: bold;
 }

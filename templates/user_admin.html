@@ -15,7 +15,7 @@
     {% endif %}
     {% endwith %}
     <form id="usereditform" method="post">
-      <table>
+      <table class="user_admin">
         <thead>
           <tr>
             <td>Ifa/Orisha Name</td>
@@ -35,8 +35,8 @@
             <td data-name="grade_level" class="number">{{u.grade_level}}</td>
             <td data-name="user_level" class="number">{{u.user_level}}</td>
             <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
-            <td class="button"><button type=button class="useredit" title="edit user">edit user</button></td>
-            <td class="button"><button type=button class="userremove" title="edit user">remove</button></td>
+            <td class="useredit"><button type=button class="useredit" title="edit user">edit user</button></td>
+            <td class="userremove"><button type=button class="userremove" title="edit user">remove</button></td>
           </tr>
           {% endfor %}
         </tbody>
