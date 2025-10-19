@@ -13,6 +13,7 @@ def dict_query(query, params=()):
         return cur.fetchall()
 
 def query(query, params=()):
+  print(query, params)
   with _conn, _conn.cursor() as cur:
     cur.execute(query, params, )
     if not cur.description is None:

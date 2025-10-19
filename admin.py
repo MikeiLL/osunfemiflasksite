@@ -122,10 +122,16 @@ def get_pdf(id):
 
 @admin.route('/thumbs/<id>')
 def get_thumbnail(id):
-        binary_thumbnail = query("SELECT thumbnail FROM library_content WHERE id = %s", (id,))[0]
-        if binary_thumbnail:
-            response = make_response(bytes(binary_thumbnail[0]))
-            response.headers['Content-Type'] = 'image.png'
-        else:
-            return render_template("400_generic.html", user=current_user, e="File not found"), 404
-        return response
+    """ print(id, type(id), id != '5')
+    if id != '5':
+        return "not yet"
+    print("################################################################STILL GOING HERE....")
+     """
+    binary_png = query("SELECT thumbnail FROM library_content WHERE id = %s", (id,))[0]
+    if binary_png:
+        response = make_response(bytes(binary_png[0]))
+        response.headers['Content-Type'] = 'image/png'
+        #response.headers['Content-Disposition'] = 'inline; filename=%s.pdf' % 'yourfilename' (for download)
+    else:
+        return render_template("400_generic.html", user=current_user, e="Whoops the file you were looking for doesn't seem to exist."), 404
+    return response
