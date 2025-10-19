@@ -111,7 +111,7 @@ def document_delete():
 
 @admin.route('/docs/<id>')
 def get_pdf(id):
-    binary_pdf = query("SELECT filecontent FROM library_content", (id,))[0]
+    binary_pdf = query("SELECT filecontent FROM library_content WHERE id = %s", (id,))[0]
     if binary_pdf:
         response = make_response(bytes(binary_pdf[0]))
         response.headers['Content-Type'] = 'application/pdf'
