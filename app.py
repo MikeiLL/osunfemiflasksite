@@ -28,6 +28,7 @@ load_dotenv()
 from payment import payment
 from student import student
 from admin import admin
+from images import images
 
 # The library needs to be configured with your account's secret key.
 # Ensure the key is kept out of any version control system you might be using.
@@ -56,6 +57,7 @@ def load_user(id):
 app.register_blueprint(payment, url_prefix="/payment")
 app.register_blueprint(student, url_prefix="/student")
 app.register_blueprint(admin, url_prefix="/admin")
+app.register_blueprint(images, url_prefix="/images")
 
 @app.context_processor
 def inject_date():
