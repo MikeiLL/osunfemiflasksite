@@ -5,7 +5,6 @@ import os
 import logging
 from database import query
 from dotenv import load_dotenv
-import manage
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
