@@ -71,7 +71,7 @@ def library():
             "interval_count": sub.plan.interval_count,
             "product_name": product.name,
         })
-    print(student_subscriptions)
+    print(student_subscriptions[0])
     if user_grade < MAX_GRADE:
         if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
     mylibrary = dict_query("""

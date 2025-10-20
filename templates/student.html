@@ -37,7 +37,7 @@
   <ul class="subscription_list">
     {% for sub in student_subscriptions %}
     <li>
-      <div class="subscriptionitem {{sub.active}}">
+      <div class="subscriptionitem {{sub.status}}">
         <h3>{{ sub.product_name }}</h3>
         <h4>{{sub.amount}}</h4>
         <p>Since {{ sub.created }} <span>(renews {{sub.current_period_end}})</span></p>

@@ -150,6 +150,10 @@ ul.subscription_list li p span {
   color: var(--grey)
 }
 
+.subscriptionitem.active {
+  border: 2px solid var(--brandprimary);
+}
+
 /*
 ADMIN
 */

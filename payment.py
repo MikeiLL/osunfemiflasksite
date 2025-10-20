@@ -46,6 +46,14 @@ def create_checkout_session():
             increase_grade_level(min(current_user.grade_level + int(product.metadata.grade_increase), max_grade_level))
     return jsonify({"url": checkout_session.url})
 
+@payment.route("/subscription", methods=["PUT"])
+def cancel_subscription():
+    data = request.json
+    cancel = stripe.Subscription.cancel(data.get('subscription_id'))
+    print("stripe_cancel_subscription", cancel)
+    return jsonify({"hellow": "world"})
+
+
 @payment.route("/webhook", methods=["POST"])
 def stripe_webhook():
     payload = request.get_data(as_text=True)

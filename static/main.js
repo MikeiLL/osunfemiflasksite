@@ -176,13 +176,15 @@ on("click", ".imgthumb", (e) => {
 });
 
 on("click", ".subscription_cancel", simpleconfirm("Change subscription status?", async (e) => {
+  DOM("dialog#spinner").showModal();
   let response = await fetch("/payment/subscription", {
-    method: "POST",
+    method: "PUT",
     headers: {"content-type": "application/json"},
     body: JSON.stringify({"subscription_id": e.match.id.replace("subscription_", "")}),
   });
   let result = await response.json();
-  window.location.reload();
+  console.log(result);
+  //window.location.reload();
 }));
 
 on("submit", "#libraryadmin", (e) => {
