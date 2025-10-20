@@ -38,14 +38,14 @@
     {% endfor %}
   </ul>
   {% endif %}
-  <form method="post" enctype="multipart/form-data">
+  <form id=libraryadmin method="post" enctype="multipart/form-data">
     <fieldset>
       <legend>New Document</legend>
-      <label><input type=text name=title required>Title</label>
-      <label><input type=text name=description required>Description</label>
-      <label><input type=number name=minimum_grade value="1" required>Required Grade</label>
+      <label><input type=text name=title size=40 required>Title</label>
+      <label><textarea type=text name=description rows=4 cols=30 required></textarea>Description</label>
+      <label><input type=number name=minimum_grade value="1" size=2 min=1 max=20 required>Required Grade</label>
       <label><input type="file" name="document" accept="application/pdf" required>Document PDF</label>
-      <label><input type="file" name="thumbnail" accept="image/png, image/jpg" required>Thumbnail</label>
+      <label><input type="file" name="thumbnail" accept="image/png, image/jpg" required>Preview Thumbnail</label>
       <button type="submit">Upload</button>
     </fieldset>
   </form>

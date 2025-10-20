@@ -197,6 +197,19 @@ table.user_admin thead {
   font-weight: bold;
 }
 
+
+form#libraryadmin fieldset {
+  width: fit-content;
+}
+
+form#libraryadmin label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 0.5em;
+  color: var(--brandprimary);
+}
+
 /*
 DIALOG
 */
