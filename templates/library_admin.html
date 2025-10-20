@@ -17,18 +17,19 @@
   {% if not library_content %}
   <p> No classes yet. Add some below.</p>
   {% else %}
-  <ul id="admin_library_content">
+  <ul id="library_content">
     {% for doc in library_content %}
     <li>
       <div class="libraryitem">
         <h3>{{ doc.title }}</h3>
         <p>{{doc.description}}</p>
         <figure class="details">
-          <img src="/images/thumbs/{{doc.id}}" height="450" alt="thumbnail image">
+          <img src="/images/thumbs/{{doc.id}}" data-id="{{doc.id}}" class="imgthumb" height="220" alt="thumbnail image">
           <figcaption>
             <p>Filename: {{doc.filename}}</p>
             <p>Minimum grade: {{doc.minimum_grade}}</p>
-            <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view pdf</a></p>
+            <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view pdf</a>
+            </p>
           </figcaption>
         </figure>
         <button type="button" class="documentremove" id="document_{{doc.id}}">delete</button>

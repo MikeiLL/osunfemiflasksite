@@ -153,16 +153,18 @@ ul.subscription_list li p span {
 /*
 ADMIN
 */
-ul#admin_library_content {
+ul#library_content {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   padding-left: 0;
-  align-items: center;
+  align-items: flex-start;
+  gap: 0.5em;
 }
 
-ul#admin_library_content li .libraryitem {
-  padding: 1em;
+ul#library_content li .libraryitem,
+li .libraryitem {
+  padding: 0 1em;
   border: 1px solid var(--grey);
   border-radius: 5px;
   display: flex;
@@ -171,7 +173,7 @@ ul#admin_library_content li .libraryitem {
   max-width: 450px;
 }
 
-ul#admin_library_content li .libraryitem figure {
+ul#library_content li .libraryitem figure {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -179,7 +181,7 @@ ul#admin_library_content li .libraryitem figure {
   border-radius: 5px;
 }
 
-ul#admin_library_content li .libraryitem figure figcaption {
+ul#library_content li .libraryitem figure figcaption {
   background-color: var(--lightgrey);
   width: 100%;
   padding: 0.5em 2em;
@@ -204,9 +206,18 @@ dialog#simpleconfirmdlg {
 }
 
 dialog#simpleconfirmdlg footer,
-dialog#simpleconfirmdlg header {
+#dlg_header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+}
+
+#dlg_header {
+  border-bottom: 1px solid var(--grey);
+}
+
+#dlg_footer {
+  border-top: 1px solid var(--grey);
 }
 
 @media screen and (min-width: 1024px) {

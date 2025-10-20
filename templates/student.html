@@ -8,16 +8,22 @@
   {% if not mylibrary %}
   <p> No classes yet. Purchase or subscribe <a href="/" title="home">here</a>.</p>
   {% else %}
-  <ul class="class_list">
+  <ul id="library_content">
     {% for doc in mylibrary %}
     <li>
-      <a href="docs/{{doc.id}}" title="{{doc.description}}">
-        <div class="libraryitem">
-          <h3>{{ doc.title }}</h3>
-          <p>{{doc.description}}</p>
-          <img src="/images/thumbs/{{doc.id}}" height="450" alt="thumbnail image">
-        </div>
-      </a>
+      <div class="libraryitem">
+        <h3>{{ doc.title }}</h3>
+        <p>{{doc.description}}</p>
+        <figure class="details">
+          <img src="/images/thumbs/{{doc.id}}" data-id="{{doc.id}}" class="imgthumb" height="220" alt="thumbnail image">
+          <figcaption>
+            <p>Filename: {{doc.filename}}</p>
+            <p>Minimum grade: {{doc.minimum_grade}}</p>
+            <p><a href="docs/{{doc.id}}" title="{{doc.description}}">view pdf</a>
+            </p>
+          </figcaption>
+        </figure>
+      </div>
     </li>
     {% endfor %}
   </ul>
