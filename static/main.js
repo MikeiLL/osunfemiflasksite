@@ -4,7 +4,7 @@ import {
     on,
     DOM,
 } from "https://rosuav.github.io/choc/factory.js";
-const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P, TD, IMG} = choc; //autoimport
+const {A, BUTTON, FIELDSET, FORM, H2, H3, H4, INPUT, LABEL, LEGEND, P, TD, IMG, SPAN} = choc; //autoimport
 import {simpleconfirm} from "./utils.js";
 
 const PURCHASE = {
@@ -169,7 +169,7 @@ on("click", "button.documentremove", simpleconfirm("Delete document?", async (e)
 }));
 
 on("click", ".imgthumb", (e) => {
-  set_content("dialog#main h2", "Class PDF Thumbnail");
+  set_content("dialog#main h2", ["Class Preview", SPAN("(Close this window and click view pdf to open or download file.)")]);
   set_content("dialog#main section", [IMG({src: `/images/thumbs/${e.match.dataset.id}`})]);
   set_content("dialog#main footer", []);
   DOM("dialog#main").showModal();

@@ -77,7 +77,7 @@ def library():
     mylibrary = dict_query("""
         SELECT * FROM library_content
         WHERE active = true AND minimum_grade <= %s
-        ORDER BY minimum_grade, filename
+        ORDER BY filename
     """, (user_grade,))
     return render_template("student.html", user=current_user, mylibrary=mylibrary, student_subscriptions=student_subscriptions)
 

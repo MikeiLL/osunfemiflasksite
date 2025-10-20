@@ -43,7 +43,7 @@ def index():
 def library():
     library_content = dict_query("""SELECT id, title, description, filename, minimum_grade, active
                                  FROM library_content
-                                 ORDER BY minimum_grade, filename""")
+                                 ORDER BY filename""")
     return render_template("library_admin.html", user=current_user, library_content=library_content)
 
 

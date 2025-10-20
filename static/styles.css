@@ -233,6 +233,21 @@ dialog#simpleconfirmdlg footer,
   border-top: 1px solid var(--grey);
 }
 
+dialog#main h2 {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog#main h2 span {
+  color: var(--grey);
+  font-size: smaller;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 @media screen and (min-width: 1024px) {
   p {
     font-size: 1.2em;

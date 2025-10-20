@@ -33,7 +33,6 @@ class User(UserMixin):
 
     @classmethod
     def from_id(cls, id, password=None):
-        print("from_id")
         data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + " FROM users WHERE id=%s", (id,))[0]
         if not data: return None
         return cls(*data)
