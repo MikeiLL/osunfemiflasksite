@@ -174,3 +174,17 @@ on("click", ".imgthumb", (e) => {
   set_content("dialog#main footer", []);
   DOM("dialog#main").showModal();
 });
+
+on("click", ".subscription_cancel", simpleconfirm("Change subscription status?", async (e) => {
+  let response = await fetch("/payment/subscription", {
+    method: "POST",
+    headers: {"content-type": "application/json"},
+    body: JSON.stringify({"subscription_id": e.match.id.replace("subscription_", "")}),
+  });
+  let result = await response.json();
+  window.location.reload();
+}));
+
+on("submit", "#libraryadmin", (e) => {
+  DOM("dialog#spinner").showModal();
+});
