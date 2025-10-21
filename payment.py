@@ -50,8 +50,13 @@ def create_checkout_session():
 def cancel_subscription():
     data = request.json
     cancel = stripe.Subscription.cancel(data.get('subscription_id'))
-    print("stripe_cancel_subscription", cancel)
-    return jsonify({"hellow": "world"})
+    return jsonify({"success": "cancelled"})
+
+@payment.route("/subscription", methods=["POST"])
+def resume_subscription():
+    data = request.json
+    renew = stripe.Subscription.resume(data.get('subscription_id'))
+    return jsonify({"success": "renewed"})
 
 
 @payment.route("/webhook", methods=["POST"])

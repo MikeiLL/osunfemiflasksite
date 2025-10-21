@@ -230,6 +230,11 @@ dialog#simpleconfirmdlg {
   min-width: 400px;
 }
 
+dialog#simpleconfirmdlg header {
+  display: flex;
+  justify-content: space-between;
+}
+
 dialog#simpleconfirmdlg footer,
 #dlg_header {
   display: flex;

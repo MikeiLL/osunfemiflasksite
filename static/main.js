@@ -175,7 +175,7 @@ on("click", ".imgthumb", (e) => {
   DOM("dialog#main").showModal();
 });
 
-on("click", ".subscription_cancel", simpleconfirm("Change subscription status?", async (e) => {
+on("click", ".subscription_cancel", simpleconfirm("Cancel or pause membership/tithe?", async (e) => {
   DOM("dialog#spinner").showModal();
   let response = await fetch("/payment/subscription", {
     method: "PUT",
@@ -183,8 +183,18 @@ on("click", ".subscription_cancel", simpleconfirm("Change subscription status?",
     body: JSON.stringify({"subscription_id": e.match.id.replace("subscription_", "")}),
   });
   let result = await response.json();
-  console.log(result);
-  //window.location.reload();
+  window.location.reload();
+}));
+
+on("click", ".subscription_resume", simpleconfirm("Resume membership/tithe?", async (e) => {
+  DOM("dialog#spinner").showModal();
+  let response = await fetch("/payment/subscription", {
+    method: "POST",
+    headers: {"content-type": "application/json"},
+    body: JSON.stringify({"subscription_id": e.match.id.replace("subscription_", "")}),
+  });
+  let result = await response.json();
+  window.location.reload();
 }));
 
 on("submit", "#libraryadmin", (e) => {
