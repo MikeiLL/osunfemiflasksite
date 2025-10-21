@@ -43,8 +43,6 @@
         <p>Since {{ sub.created }} <span>({{sub.ends_or_renews}} {{sub.current_period_end}})</span></p>
         {% if sub.status == 'active' %}
         <button id="subscription_{{sub.id}}" class="subscription_cancel">Cancel</button>
-        {% else %}
-        <button id="subscription_{{sub.id}}" class="subscription_resume">Resume</button>
         {% endif %}
       </div>
     </li>
