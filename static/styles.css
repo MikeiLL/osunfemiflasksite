@@ -10,6 +10,7 @@
   --white: rgb(246, 245, 207);
   --lightgrey: lightgrey;
   --grey: grey;
+  --transparentgrey: #99999933;
 }
 
 main {
@@ -150,8 +151,15 @@ ul.subscription_list li p span {
   color: var(--grey)
 }
 
+.subscriptionitem {
+  background: var(--transparentgrey);
+  color: var(--grey);
+  padding: 1em;
+}
+
 .subscriptionitem.active {
-  border: 2px solid var(--brandprimary);
+  background: none;
+  color: var(--black);
 }
 
 /*

@@ -40,7 +40,7 @@
       <div class="subscriptionitem {{sub.status}}">
         <h3>{{ sub.product_name }}</h3>
         <h4>{{sub.amount}}</h4>
-        <p>Since {{ sub.created }} <span>(renews {{sub.current_period_end}})</span></p>
+        <p>Since {{ sub.created }} <span>({{sub.ends_or_renews}} {{sub.current_period_end}})</span></p>
         {% if sub.status == 'active' %}
         <button id="subscription_{{sub.id}}" class="subscription_cancel">Cancel</button>
         {% else %}

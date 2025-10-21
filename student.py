@@ -41,12 +41,6 @@ stripe.api_key = stripe_keys["secret_key"]
 
 # TODO look into https://docs.stripe.com/api/customer_portal/sessions
 
-@student.route("/cancel", methods=["post"])
-def cancel_subscription():
-    data = request.json()
-    subscription_id = data['subscription_id']
-    cancellation = stripe.Subscription.cancel(subscription_id)
-    return jsonify({"message": "subscription cancelled"})
 
 @student.route("/")
 def library():
@@ -58,20 +52,26 @@ def library():
     # ended (subscriptions that are canceled and subscriptions that are expired due to incomplete payment)
     # and all.
     student_subscriptions = []
+
     for sub in subscriptions.data:
         product = stripe.Product.retrieve(sub.plan.product)
+        if sub.get('canceled_at'):
+            if sub.get('canceled_at') < time.time():
+                ends_or_renews = "ends"
+            else: ends_or_renews = "ended"
+        else: ends_or_renews = "renews"
         student_subscriptions.append({
             "id": sub.id,
             "created": datetime.fromtimestamp(sub.created).strftime('%d %b, %Y'),
             #"current_period_start": date.fromtimestamp(sub.current_period_start).strftime('%d %b, %Y'),
             "current_period_end": date.fromtimestamp(sub.current_period_end).strftime('%d %b, %Y'),
-            "status": "active" if sub.plan.active else "expired",
+            "status": "cancelled" if sub.get('canceled_at') else "active",
+            "ends_or_renews": ends_or_renews,
             "amount": locale.currency(sub.plan.amount / 100),
             "interval": sub.plan.interval,
             "interval_count": sub.plan.interval_count,
             "product_name": product.name,
         })
-    print(student_subscriptions[0])
     if user_grade < MAX_GRADE:
         if (len(subscriptions.data) >= 1): user_grade = MAX_GRADE
     mylibrary = dict_query("""
@@ -79,7 +79,7 @@ def library():
         WHERE active = true AND minimum_grade <= %s
         ORDER BY filename
     """, (user_grade,))
-    return render_template("student.html", user=current_user, mylibrary=mylibrary, student_subscriptions=student_subscriptions)
+    return render_template("student.html", user=current_user, mylibrary=mylibrary, student_subscriptions=student_subscriptions,)
 
 @student.route('/docs/<id>')
 def get_pdf(id):
