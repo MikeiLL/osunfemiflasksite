@@ -28,7 +28,7 @@ async function make_transaction(purchase) {
   if (result.url) {
     window.location = result.url;
   } else {
-    set_content("dialog#main section", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
+    set_content("dialog#main #dlg_content", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
   }
 }
 
@@ -44,7 +44,7 @@ on("click", ".transaction", (e) => {
 
 function login(e) {
   set_content("dialog#main h2", "Login");
-  set_content("dialog#main section", [
+  set_content("dialog#main #dlg_content", [
     FORM({id: "login"}, [
       FIELDSET([
         LEGEND("Login"),
@@ -65,7 +65,7 @@ function login(e) {
 on("click", "a[href=forgotpassword]", (e) => {
   e.preventDefault();
   set_content("dialog#main header h2", "Forgot Your Password?");
-  set_content("dialog#main section", H3(common_strings.help_text));
+  set_content("dialog#main #dlg_content", H3(common_strings.help_text));
   set_content("dialog#main footer", BUTTON({class: "dialog_close"}, "Cancel"));
 })
 
@@ -83,7 +83,7 @@ on("submit", "form#login", async (e) => {
   } else {
     if (PURCHASE.price_id) make_transaction(PURCHASE);
     let actionmsg = result.user_level && result.grade_level >= 1 ? "Let's go to your dashboard..." : "Make a purchase or subscription below";
-    set_content("dialog#main section", `Welcome back, ${result.ifaorishaname || result.fullname}. ${actionmsg}`);
+    set_content("dialog#main #dlg_content", `Welcome back, ${result.ifaorishaname || result.fullname}. ${actionmsg}`);
     setTimeout(() => {
       if (result.user_level > 1) return window.location = "/admin";
       if (result.user_level <= 1) {
@@ -95,7 +95,7 @@ on("submit", "form#login", async (e) => {
 })
 function signup(e) {
   replace_content("dialog#main h2", "Register");
-  replace_content("dialog#main section", [
+  replace_content("dialog#main #dlg_content", [
     FORM({id: "signup"}, [
       FIELDSET([
         LEGEND("Register"),
@@ -123,7 +123,7 @@ on("submit", "form#signup", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    set_content("dialog#main section", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    set_content("dialog#main #dlg_content", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
   }
 });
 
@@ -170,7 +170,7 @@ on("click", "button.documentremove", simpleconfirm("Delete document?", async (e)
 
 on("click", ".imgthumb", (e) => {
   set_content("dialog#main h2", ["Class Preview", SPAN("(Close this window and click view pdf to open or download file.)")]);
-  set_content("dialog#main section", [IMG({src: `/images/thumbs/${e.match.dataset.id}`})]);
+  set_content("dialog#main #dlg_content", [IMG({src: `/images/thumbs/${e.match.dataset.id}`})]);
   set_content("dialog#main footer", []);
   DOM("dialog#main").showModal();
 });
