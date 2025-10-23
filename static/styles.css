@@ -219,8 +219,8 @@ form#login fieldset {
   width: fit-content;
 }
 
-form#libraryadmin label,
-form#login label {
+form label,
+form label {
   display: flex;
   flex-direction: column;
   align-items: flex-end;

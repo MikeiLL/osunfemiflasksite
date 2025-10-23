@@ -28,7 +28,7 @@ async function make_transaction(purchase) {
   if (result.url) {
     window.location = result.url;
   } else {
-    set_content("dialog#main #dlg_content", [H2("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
+    set_content("dialog#main #dlg_content", [H3("Something went wrong."), P([result.error || '', result.message]), H4(common_strings.help_text)])
   }
 }
 
@@ -42,31 +42,45 @@ on("click", ".transaction", (e) => {
   };
 });
 
-function login(e) {
-  set_content("dialog#main h2", "Login");
-  set_content("dialog#main #dlg_content", [
-    FORM({id: "login"}, [
-      FIELDSET([
-        LEGEND("Login"),
-        LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
-        LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password"]),
-        INPUT({type: "submit"}, "Submit"),
+function render_maindlg(heading, content, footer, alerts) {
+  const dlg = DOM("dialog#main");
+  heading && set_content("dialog#main h2", heading || "General Task");
+  set_content("dialog#main #alertmessages", alerts)
+  content && set_content("dialog#main #dlg_content", content || "content not found");
+  footer && set_content("dialog#main footer", footer || "");
+  dlg.open || dlg.showModal();
+  // alternate for above line:
+  //if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
+}
+
+function login() {
+  return render_maindlg(
+    "Login",
+    [
+      FORM({id: "login"}, [
+        FIELDSET([
+          LEGEND("Login"),
+          LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
+          LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password"]),
+          INPUT({type: "submit"}, "Submit"),
+        ]),
       ]),
-    ]),
-  ]);
-  set_content("dialog#main footer", [
-    BUTTON({id: "register"}, "Register"),
-    A({href: "forgotpassword"}, "Forgot password"),
-    BUTTON({class: "dialog_close"}, "Cancel"),
-  ]);
-  DOM("dialog#main").showModal();
+    ],
+    [
+      BUTTON({id: "register"}, "Register"),
+      A({href: "forgotpassword"}, "Forgot password"),
+      BUTTON({class: "dialog_close"}, "Cancel"),
+    ]
+  );
 }
 
 on("click", "a[href=forgotpassword]", (e) => {
   e.preventDefault();
-  set_content("dialog#main header h2", "Forgot Your Password?");
-  set_content("dialog#main #dlg_content", H3(common_strings.help_text));
-  set_content("dialog#main footer", BUTTON({class: "dialog_close"}, "Cancel"));
+  render_maindlg(
+    "Forgot Your Password?",
+    H3(common_strings.help_text),
+    BUTTON({class: "dialog_close"}, "Cancel")
+  );
 })
 
 on("submit", "form#login", async (e) => {
@@ -79,11 +93,16 @@ on("submit", "form#login", async (e) => {
   let result = await response.json();
   DOM("dialog#spinner").close()
   if (result.error) {
-    set_content("dialog#main #alertmessages", [H2(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)])
+    render_maindlg(null, null, null,
+      [H3(result.error || "Something went wrong."), P(result.message), H4(common_strings.help_text)]
+    );
   } else {
     if (PURCHASE.price_id) make_transaction(PURCHASE);
     let actionmsg = result.user_level && result.grade_level >= 1 ? "Let's go to your dashboard..." : "Make a purchase or subscription below";
-    set_content("dialog#main #dlg_content", `Welcome back, ${result.ifaorishaname || result.fullname}. ${actionmsg}`);
+    render_maindlg(null,
+      `Welcome back, ${result.ifaorishaname || result.fullname}. ${actionmsg}`,
+      null,
+    );
     setTimeout(() => {
       if (result.user_level > 1) return window.location = "/admin";
       if (result.user_level <= 1) {
@@ -94,23 +113,23 @@ on("submit", "form#login", async (e) => {
   }
 })
 function signup(e) {
-  replace_content("dialog#main h2", "Register");
-  replace_content("dialog#main #dlg_content", [
-    FORM({id: "signup"}, [
-      FIELDSET([
-        LEGEND("Register"),
-        LABEL([INPUT({name: "fullname", "aria-required": true, "required": true}), "Full Name"]),
-        LABEL([INPUT({name: "orishaname"}), "Ifa/Orisha Name"]),
-        LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
-        LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password (at least 12 characters)"]),
-        INPUT({type: "submit"}, "Submit"),
-      ])
-    ]),
-  ]);
-  set_content("dialog#main footer", [
-    BUTTON({class: "dialog_close"}, "Cancel"),
-  ]);
-  if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
+  render_maindlg(
+    "Register",
+    [
+      FORM({id: "signup"}, [
+        FIELDSET([
+          LEGEND("Register"),
+          LABEL([INPUT({name: "fullname", "aria-required": true, "required": true}), "Full Name"]),
+          LABEL([INPUT({name: "orishaname"}), "Ifa/Orisha Name"]),
+          LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
+          LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password (at least 12 characters)"]),
+          INPUT({type: "submit"}, "Submit"),
+        ])
+      ]),
+    ],
+    [
+      BUTTON({class: "dialog_close"}, "Cancel"),
+    ]);
 }
 on("click", "button#loginbutton", login);
 on("click", "button#signup", signup);
@@ -123,7 +142,7 @@ on("submit", "form#signup", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    set_content("dialog#main #dlg_content", [H2(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    set_content("dialog#main #dlg_content", [H3(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
   }
 });
 
