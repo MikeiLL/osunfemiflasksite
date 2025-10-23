@@ -41,11 +41,13 @@
     <nav>
       <ul>
         {% if user.user_level %}
-        {% if user.user_level == 2 %}
+        {% if user.user_level >= 2 %}
+        <li><a href="/admin">Admin Home</a></li>
         <li><a href="/admin/users">Users</a></li>
         <li><a href="/admin/library">Library</a></li>
         <li><a href="/student">Your Student Dashboard</a></li>
         {% else %}
+        <li><a href="/">Marketplace</a></li>
         <li><a href="/student">Dashboard</a></li>
         {% endif %}
         {% endif %}

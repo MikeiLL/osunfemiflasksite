@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+
+{% block title %}Administration{% endblock %}
+
+{% block main %}
+<section>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  <h2>Administrator, Instructor Dashboard</h2>
+  Using the links above take you to:
+  <ul>
+    <li>
+      <h3>Admin Home</h3>
+      <p>Instructions (this screen)</p>
+    </li>
+    <li>
+      <h3>User Administration</h3>
+      <p>Delete and edit users. Users are added when they make a purchase or subscription to the site.</p>
+      <p><b>Grade level</b> effects which class documents they will have access to.</p>
+      <p><b>User level</b> effects what they can do in the site. Students should be user level one (1) unless they are
+        trusted to add and remove documents and to remove and edit users.</p>
+    </li>
+    <li>
+      <h3>Library Administration</h3>
+      <p>Add and remove documents.</p>
+    </li>
+    <li>
+      <h3>Your Student Dashboard</h3>
+      <p>This is where you can access the documents the way the students do.</p>
+    </li>
+</section>
+{% endblock %}
