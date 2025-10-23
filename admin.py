@@ -36,9 +36,6 @@ domain_url = os.environ["DOMAIN_URL"]
 stripe.api_key = stripe_keys["secret_key"]
 
 @admin.route("/")
-def index():
-    return "hi, admin go to slash library for something to do"
-
 @admin.route("/library")
 def library():
     library_content = dict_query("""SELECT id, title, description, filename, minimum_grade, active
