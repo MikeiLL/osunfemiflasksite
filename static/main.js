@@ -142,7 +142,13 @@ on("submit", "form#signup", async (e) => {
   });
   let result = await response.json();
   if (result.error) {
-    set_content("dialog#main #dlg_content", [H3(result.error || "Something went wrong."), P(result.message), H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")])
+    render_maindlg(
+      null, null, null,
+      [
+        H3(result.error || "Something went wrong."),
+        P(result.message),
+        H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")
+      ]);
   }
 });
 
@@ -188,10 +194,11 @@ on("click", "button.documentremove", simpleconfirm("Delete document?", async (e)
 }));
 
 on("click", ".imgthumb", (e) => {
-  set_content("dialog#main h2", ["Class Preview", SPAN("(Close this window and click view pdf to open or download file.)")]);
-  set_content("dialog#main #dlg_content", [IMG({src: `/images/thumbs/${e.match.dataset.id}`})]);
-  set_content("dialog#main footer", []);
-  DOM("dialog#main").showModal();
+  render_maindlg(
+    ["Class Preview", SPAN("(Close this window and click view pdf to open or download file.)")],
+    [IMG({src: `/images/thumbs/${e.match.dataset.id}`})],
+    [],
+  );
 });
 
 on("click", ".subscription_cancel", simpleconfirm("Cancel membership/tithe?", async (e) => {
