@@ -33,21 +33,25 @@ class User(UserMixin):
 
     @classmethod
     def from_id(cls, id, password=None):
-        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + " FROM users WHERE id=%s", (id,))[0]
-        if not data: return None
-        return cls(*data)
+        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + " FROM users WHERE id=%s", (id,))
+        if not len(data): return None
+        user = data[0]
+        if not user: return None
+        return cls(*user)
 
     @classmethod
     def from_credentials(cls, login, password):
-        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + ", password FROM users WHERE email=%s", (login.lower(),),)[0]
-        if not data: return None
-        if not utils.check_password(password, data[-1]):
+        data = query("SELECT " + ", ".join(cls.__dataclass_fields__) + ", password FROM users WHERE email=%s", (login.lower(),),)
+        if not len(data): return None
+        user = data[0]
+        if not user: return None
+        if not utils.check_password(password, user[-1]):
             # Passwords do not match. Pretend the user doesn't exist.
             # Note that even if the user _really_ doesn't exist, we still
             # do a password verification. This helps protect against
             # timing-based attacks.
             return None
-        return cls(*data[:-1])
+        return cls(*user[:-1])
 
 
 @cmdline
