@@ -30,7 +30,8 @@ def increase_grade_level(amt):
 def create_checkout_session():
     data = request.json
     checkout_session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
+        payment_method_types=["card", "cashapp"],
+        # https://docs.stripe.com/api/payment_methods/object?api-version=2025-09-30.preview
         customer=current_user.stripe_customer_id,
         mode="subscription" if data["recurring"] == 'true' else "payment",
         line_items=[{"price": data["price_id"], "quantity": 1}],
