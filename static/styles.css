@@ -30,6 +30,7 @@ body {
 
 ul.cards {
   list-style: none;
+  padding-left: 0;
 }
 
 ul.cards li {
@@ -95,6 +96,16 @@ body>header nav li {
 
 body>header #loginbutton {
   background-color: var(--brandsecondary);
+}
+
+div.index.flexrow button#signup {
+  padding: 1em;
+  border-radius: 15px;
+  margin: auto;
+  display: block;
+  margin-top: 2em;
+  font-weight: bold;
+  color: var(--black);
 }
 
 /*

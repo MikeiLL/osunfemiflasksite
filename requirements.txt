@@ -10,3 +10,4 @@ clize
 bcrypt
 flask_login
 pytest
+Flask-Mail
