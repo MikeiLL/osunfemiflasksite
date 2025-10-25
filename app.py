@@ -20,6 +20,7 @@ from datetime import datetime
 from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+from flask_mail import Mail, Message
 import manage
 import psycopg2
 from dotenv import load_dotenv
@@ -39,6 +40,13 @@ endpoint_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
+app.config['MAIL_SERVER'] = os.environ['MAIL_SERVER']
+app.config['MAIL_PORT'] = os.environ['MAIL_PORT']
+app.config['MAIL_USE_TLS'] = os.environ['MAIL_USE_TLS']
+app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+app.config['MAIL_PASSWORD'] = os.environ.get('SENDGRID_API_KEY')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+mail = Mail(app)
 
 
 def cache_bust(filename):
@@ -86,12 +94,25 @@ def logout():
 
 @app.route("/signup", methods=["POST"])
 def signup():
+    """
+    TODO send a confirmation link first:
+
+    msg = Message('Twilio SendGrid Test Email', recipients=['mike@centerofwow.com', 'mutinyzoo@gmail.com'])
+    msg.body = 'This is a test email!'
+    msg.html = '<p>This is a test email!</p>'
+    mail.send(msg)
+    """
     user = manage.create_user(
         request.form['fullname'],
         request.form["email"],
         request.form["password"],
         request.form['orishaname'],
     )
+    # For now just let me know when we have a new registrant
+    msg = Message('New User Registration', recipients=['mike@mzoo.org', 'mutinyzoo@gmail.com'])
+    msg.body = 'New registration for %s.' % request.form["email"]
+    msg.html = '<p>New registration for %s</p>' % request.form["email"]
+    mail.send(msg)
     return json.dumps(user)
 
 @app.route("/login", methods=["POST"])

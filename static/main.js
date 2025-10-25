@@ -136,6 +136,7 @@ on("click", "button#signup", signup);
 on("click", "button#register", signup);
 on("submit", "form#signup", async (e) => {
   e.preventDefault();
+  DOM("dialog#spinner").showModal();
   let response = await fetch("/signup", {
     method: "POST",
     body: new FormData(e.match),
@@ -150,6 +151,7 @@ on("submit", "form#signup", async (e) => {
         H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")
       ]);
   }
+  DOM("dialog#spinner").close();
 });
 
 on("click", "button.cancel_user_edit", (e) => { window.location.reload()})
