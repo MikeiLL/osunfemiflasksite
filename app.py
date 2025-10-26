@@ -21,6 +21,7 @@ from flask import Flask, jsonify, request, render_template, redirect, flash
 """ url_for, Response, send_from_directory,  """
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
+from flask_sitemap import Sitemap
 import manage
 import psycopg2
 from dotenv import load_dotenv
@@ -29,6 +30,7 @@ load_dotenv()
 from payment import payment
 from student import student
 from admin import admin
+from account import account
 from images import images
 
 # The library needs to be configured with your account's secret key.
@@ -47,6 +49,7 @@ app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
 app.config['MAIL_PASSWORD'] = os.environ.get('SENDGRID_API_KEY')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 mail = Mail(app)
+ext = Sitemap(app=app)
 
 
 def cache_bust(filename):
@@ -65,6 +68,7 @@ def load_user(id):
 app.register_blueprint(payment, url_prefix="/payment")
 app.register_blueprint(student, url_prefix="/student")
 app.register_blueprint(admin, url_prefix="/admin")
+app.register_blueprint(account, url_prefix="/account")
 app.register_blueprint(images, url_prefix="/images")
 
 @app.context_processor
@@ -82,6 +86,10 @@ def index():
     purchases = [item for item in items if not item.price.recurring]
     return render_template("index.html", subscriptions=subscriptions, purchases=purchases, user=current_user)
 
+@ext.register_generator
+def index():
+    # Not needed if you set SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS=True
+    yield 'index', {}
 
 @app.route("/login")
 def login_get():
@@ -92,28 +100,10 @@ def logout():
     logout_user()
     return redirect("/")
 
-@app.route("/signup", methods=["POST"])
-def signup():
-    """
-    TODO send a confirmation link first:
 
-    msg = Message('Twilio SendGrid Test Email', recipients=['mike@centerofwow.com', 'mutinyzoo@gmail.com'])
-    msg.body = 'This is a test email!'
-    msg.html = '<p>This is a test email!</p>'
-    mail.send(msg)
-    """
-    user = manage.create_user(
-        request.form['fullname'],
-        request.form["email"],
-        request.form["password"],
-        request.form['orishaname'],
-    )
-    # For now just let me know when we have a new registrant
-    msg = Message('New User Registration', recipients=['mike@mzoo.org', 'mutinyzoo@gmail.com'])
-    msg.body = 'New registration for %s.' % request.form["email"]
-    msg.html = '<p>New registration for %s</p>' % request.form["email"]
-    mail.send(msg)
-    return json.dumps(user)
+@app.route("/reset_password")
+def reset_password_get():
+	return render_template("reset_password.html", page_title="Reset Glitch Account Password")
 
 @app.route("/login", methods=["POST"])
 def login_post():

@@ -53,7 +53,7 @@ function render_maindlg(heading, content, footer, alerts) {
   //if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
 }
 
-function login() {
+function login(error_msg) {
   return render_maindlg(
     "Login",
     [
@@ -62,6 +62,7 @@ function login() {
           LEGEND("Login"),
           LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
           LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password"]),
+          LABEL([INPUT({name: "password2", type: "password", "aria-required": true, "required": true, minlength: 12}), "Confirm Password"]),
           INPUT({type: "submit"}, "Submit"),
         ]),
       ]),
@@ -70,7 +71,8 @@ function login() {
       BUTTON({id: "register"}, "Register"),
       A({href: "forgotpassword"}, "Forgot password"),
       BUTTON({class: "dialog_close"}, "Cancel"),
-    ]
+    ],
+    error_msg
   );
 }
 
@@ -137,6 +139,7 @@ on("click", "button#register", signup);
 on("submit", "form#signup", async (e) => {
   e.preventDefault();
   DOM("dialog#spinner").showModal();
+  // check passwords match
   let response = await fetch("/signup", {
     method: "POST",
     body: new FormData(e.match),
@@ -144,12 +147,12 @@ on("submit", "form#signup", async (e) => {
   let result = await response.json();
   if (result.error) {
     render_maindlg(
-      null, null, null,
+      null, null, null, result.error);/*
       [
         H3(result.error || "Something went wrong."),
         P(result.message),
-        H4("Call Iya or better yet, email Pinpin at help@oghtolal.com.")
-      ]);
+        H4("Try again, call Iya or better yet, email Pinpin at help@oghtolal.com.")
+      ]) */
   }
   DOM("dialog#spinner").close();
 });

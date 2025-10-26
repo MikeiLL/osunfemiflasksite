@@ -17,6 +17,8 @@ users
   user_level int not null default 1 -- noaccess=0, manager=1, admin=3
   grade_level int references grade_levels default 0 -- for access to classes
   stripe_customer_id varchar not null default ''
+	hex_key varchar not null default '' -- for registration confirmation
+	status int not null default 0
 
 -- TODO users stores reference won't work when running
 -- the script because the stores table is not yet created
