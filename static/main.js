@@ -125,6 +125,7 @@ function signup(e) {
           LABEL([INPUT({name: "orishaname"}), "Ifa/Orisha Name"]),
           LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
           LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password (at least 12 characters)"]),
+          LABEL([INPUT({name: "password2", type: "password", "aria-required": true, "required": true, minlength: 12}), "Confirm Password"]),
           INPUT({type: "submit"}, "Submit"),
         ])
       ]),
@@ -139,7 +140,10 @@ on("click", "button#register", signup);
 on("submit", "form#signup", async (e) => {
   e.preventDefault();
   DOM("dialog#spinner").showModal();
-  // check passwords match
+  if (e.match.elements.password.value !== e.match.elements.password2.value) {
+    DOM("dialog#spinner").close();
+    return render_maindlg(null, null, null, "Passwords don't match.")
+  }
   let response = await fetch("/signup", {
     method: "POST",
     body: new FormData(e.match),
