@@ -53,7 +53,7 @@ function render_maindlg(heading, content, footer, alerts) {
   //if (DOM("dialog#main:modal" === null)) DOM("dialog#main").showModal();
 }
 
-function login(error_msg) {
+function login(e, error_msg) {
   return render_maindlg(
     "Login",
     [
@@ -71,7 +71,7 @@ function login(error_msg) {
       A({href: "forgotpassword"}, "Forgot password"),
       BUTTON({class: "dialog_close"}, "Cancel"),
     ],
-    error_msg
+    error_msg && error_msg
   );
 }
 

@@ -30,7 +30,7 @@
       <div class="topbar">
         <a href="/">Osun's Golden Harvest Temple of Love and Light</a>
         <div class="user">
-          {% if user.fullname %}
+          {% if user and user.fullname %}
           Logged in as {{ user.fullname }} <a class="btn" href="/logout">Logout</a>
           {% else %}
           <button type=button id="loginbutton">Login</button>
@@ -40,7 +40,7 @@
     </div>
     <nav>
       <ul>
-        {% if user.user_level %}
+        {% if user and user.user_level %}
         {% if user.user_level >= 2 %}
         <li><a href="/admin">Admin Home</a></li>
         <li><a href="/admin/users">Users</a></li>

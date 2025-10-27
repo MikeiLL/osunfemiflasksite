@@ -291,6 +291,16 @@ img {
   height: auto;
 }
 
+ul.flashes {
+  list-style: none;
+  padding: 2em;
+  border: 2px dashed var(--brandprimary);
+  border-radius: 10px;
+  font-size: larger;
+  font-weight: bold;
+  color: var(--black);
+}
+
 @media screen and (min-width: 1024px) {
   p {
     font-size: 1.2em;

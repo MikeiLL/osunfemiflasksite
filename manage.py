@@ -55,7 +55,7 @@ class User(UserMixin):
 
 
 @cmdline
-def create_user(fullname, email, password, ifaorishaname=''):
+def create_user(fullname, email, password, ifaorishaname='', status=1):
     """Create a new user, return the newly-created ID
 
     username: Name for the new user
@@ -63,6 +63,8 @@ def create_user(fullname, email, password, ifaorishaname=''):
     email: Email address (must be unique)
 
     password: Clear-text password
+
+    Optional: ifaorishaname, status
     """
     email = email.lower()
     stripename = "%s (%s)" % (fullname, ifaorishaname) if ifaorishaname else fullname
@@ -72,18 +74,19 @@ def create_user(fullname, email, password, ifaorishaname=''):
                 email=email,
         )
     except stripe.error.InvalidRequestError as e:
-            return json.dumps({'error':str(e)})
+            return {'error':str(e)}
     pwd = utils.hash_password(password)
     try:
-        query("INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", \
-                                        (fullname, email, pwd, ifaorishaname, stripe_customer.id))
-        return {'success': "New Account Created"}
-    except psycopg2.IntegrityError as e:
+        info = query("""INSERT INTO users (fullname, email, password, ifaorishaname, stripe_customer_id, status, hex_key, grade_level)
+              VALUES (%s, %s, %s, %s, %s, %s, %s, 0) RETURNING id, hex_key""", \
+                                        (fullname, email, pwd, ifaorishaname, stripe_customer.id, status, utils.random_hex()))
+        if isinstance(info[0], str):
+            return {"error": info}
+        return info[0]
+    except (psycopg2.errors.NotNullViolation, psycopg2.errors.UniqueViolation, psycopg2.IntegrityError) as e:
         stripe.Customer.delete(stripe_customer.id)
         return {
-            "error":"Something went wrong.",
-            "message": str(e),
-            "description": "Maybe you already have an account under this email."
+            "error": "Wait a minute. You may already have an account under that name. \n This error occurred: \n" +str(e),
         }
 
 @cmdline

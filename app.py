@@ -100,11 +100,6 @@ def logout():
     logout_user()
     return redirect("/")
 
-
-@app.route("/reset_password")
-def reset_password_get():
-	return render_template("reset_password.html", page_title="Reset Glitch Account Password")
-
 @app.route("/login", methods=["POST"])
 def login_post():
     user = manage.User.from_credentials(
