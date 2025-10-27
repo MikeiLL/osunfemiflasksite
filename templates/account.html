@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+{% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<h2>Your account</h2>
+You may have landed on this page if you aren't registered. If you are registered, please login above. Otherwise feel
+free to register below.
+<button type=button id="signup">Register</button>
+{% endblock %}

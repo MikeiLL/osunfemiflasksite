@@ -62,7 +62,6 @@ function login(error_msg) {
           LEGEND("Login"),
           LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
           LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password"]),
-          LABEL([INPUT({name: "password2", type: "password", "aria-required": true, "required": true, minlength: 12}), "Confirm Password"]),
           INPUT({type: "submit"}, "Submit"),
         ]),
       ]),
@@ -122,8 +121,9 @@ function signup(e) {
         FIELDSET([
           LEGEND("Register"),
           LABEL([INPUT({name: "fullname", "aria-required": true, "required": true}), "Full Name"]),
-          LABEL([INPUT({name: "orishaname"}), "Ifa/Orisha Name"]),
+          LABEL([INPUT({name: "ifaorishaname"}), "Ifa/Orisha Name"]),
           LABEL([INPUT({name: "email", type: "email", "aria-required": true, "required": true}), "Email"]),
+          INPUT({name: "spamtest", type: "hidden", value: "pensacola"}),
           LABEL([INPUT({name: "password", type: "password", "aria-required": true, "required": true, minlength: 12}), "Password (at least 12 characters)"]),
           LABEL([INPUT({name: "password2", type: "password", "aria-required": true, "required": true, minlength: 12}), "Confirm Password"]),
           INPUT({type: "submit"}, "Submit"),
@@ -144,13 +144,13 @@ on("submit", "form#signup", async (e) => {
     DOM("dialog#spinner").close();
     return render_maindlg(null, null, null, "Passwords don't match.")
   }
-  let response = await fetch("/signup", {
+  let response = await fetch("/account/register", {
     method: "POST",
     body: new FormData(e.match),
   });
   let result = await response.json();
   if (result.error) {
-    render_maindlg(
+    return render_maindlg(
       null, null, null, result.error);/*
       [
         H3(result.error || "Something went wrong."),
@@ -159,6 +159,7 @@ on("submit", "form#signup", async (e) => {
       ]) */
   }
   DOM("dialog#spinner").close();
+  return window.location = "/student";
 });
 
 on("click", "button.cancel_user_edit", (e) => { window.location.reload()})
