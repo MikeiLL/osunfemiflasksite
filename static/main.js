@@ -151,15 +151,19 @@ on("submit", "form#signup", async (e) => {
   let result = await response.json();
   if (result.error) {
     return render_maindlg(
-      null, null, null, result.error);/*
-      [
-        H3(result.error || "Something went wrong."),
-        P(result.message),
-        H4("Try again, call Iya or better yet, email Pinpin at help@oghtolal.com.")
-      ]) */
+      null, null, null, result.error);
   }
   DOM("dialog#spinner").close();
-  return window.location = "/student";
+  if (result.success) {
+    return render_maindlg(
+      "One More Step",
+      [
+        P("Check your email for a confirmation link and click to confirm registration."),
+        P("If you've already purchased classes let Iya Osunfemi know you have registered and she will set your grade level."),
+        P("If not you'll be able to purchase classes and subscriptions here.")
+      ]
+    );
+  }
 });
 
 on("click", "button.cancel_user_edit", (e) => { window.location.reload()})
