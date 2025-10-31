@@ -83,9 +83,16 @@ def library():
 
 @student.route('/docs/<id>')
 def get_pdf(id):
-        #subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
-        if False:# or not subscriptions.data:
-            return render_template("400_generic.html", user=current_user, e="Whoops. This requires a subscription."), 403
+        access = False
+        minimum_grade = query("SELECT minimum_grade FROM library_content WHERE id = %s", (id,))[0]
+        print(minimum_grade)
+        if current_user.grade_level >= minimum_grade[0]:
+            access = True
+        if not access: # if not by grade level, maybe a subscription
+            subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+            if subscriptions.data: access = True
+        if not access:
+            return render_template("400_generic.html", user=current_user, e="Whoops. This requires purchase or subscription."), 403
         binary_pdf = query("SELECT filecontent FROM library_content WHERE id = %s", (id,))[0]
         if binary_pdf:
             response = make_response(bytes(binary_pdf[0]))
