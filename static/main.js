@@ -182,6 +182,11 @@ on("click", "button.useredit", (e) => {
         INPUT({type: "hidden", value: row.id.replace("user_", ""), name: "userid"})
       ])
     }
+    if (c.dataset.name == "grade_level") {
+      return TD([
+        INPUT({name: c.dataset.name, type: c.className, style: "background-color: aliceblue;", max: c.dataset.max_grade, min: 0, value: c.innerText})
+      ])
+    }
     return TD([
     INPUT({name: c.dataset.name, type: c.className, style: "background-color: aliceblue;", value: c.innerText})
   ])}

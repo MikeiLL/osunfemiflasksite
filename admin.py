@@ -82,7 +82,8 @@ def new_library_document():
 @admin.route("/users")
 def user_listing():
     users = dict_query("SELECT * FROM users ORDER BY user_level")
-    return render_template("user_admin.html", user=current_user, users=users)
+    max_grade = query("SELECT MAX(level) FROM grade_levels")[0][0]
+    return render_template("user_admin.html", user=current_user, users=users, max_grade=max_grade)
 
 @admin.route("/users", methods=["post"])
 def user_update():

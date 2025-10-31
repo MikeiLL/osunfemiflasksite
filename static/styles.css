@@ -6,6 +6,7 @@
   --brandprimary: goldenrod;
   --brandprimarylight: gold;
   --brandsecondary: rgb(119, 223, 119);
+  --brandsecondarydark: rgb(43, 69, 43);
   --black: rgb(61, 61, 59);
   --white: rgb(246, 245, 207);
   --lightgrey: lightgrey;
@@ -137,12 +138,14 @@ main>h4 {
 /*
 BUTTONS
 */
-button {
+button,
+input[type=submit] {
   padding: 0.5em;
   border: none;
   border-radius: 2px;
   background-color: var(--brandprimarylight);
 }
+
 
 /*
 Dashboard
@@ -224,10 +227,14 @@ table.user_admin thead {
   font-weight: bold;
 }
 
+/*
+FORMS
+ */
 
 form#libraryadmin fieldset,
 form#login fieldset {
-  width: fit-content;
+  width: 100%;
+  text-align: right;
 }
 
 form label,
@@ -236,7 +243,7 @@ form label {
   flex-direction: column;
   align-items: flex-end;
   margin-bottom: 0.5em;
-  color: var(--brandprimary);
+  color: var(--brandsecondarydark);
 }
 
 /*

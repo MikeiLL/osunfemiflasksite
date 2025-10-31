@@ -31,7 +31,7 @@
         <tr id="user_{{u.id}}">
           <td data-name="ifaorishaname" class="text">{{u.ifaorishaname}}</td>
           <td data-name="fullname" class="text">{{u.fullname}}</td>
-          <td data-name="grade_level" class="number">{{u.grade_level}}</td>
+          <td data-name="grade_level" data-max_grade="{{ max_grade }}" class="number">{{u.grade_level}}</td>
           <td data-name="user_level" class="number">{{u.user_level}}</td>
           <td data-name="email" class="email"><a href="mailto={{u.email}}" title="send email">{{u.email}}</a></td>
           <td class="useredit"><button type=button class="useredit" title="edit user">edit user</button></td>
