@@ -10,6 +10,6 @@
 
 - Class 4, 5, 6: Rituals that you can perform at home on your own: protective materials (candles, white rum, cigars, etc...); spiritual tools (efun, oils, bells, etc...); first rituals (money drawing, ademun, nine day ritual, etc...); attire; making eleki; the six Orisa for daily guidance.
 
-- Class 7: Brief discussion of ori; egungun; possession; whitchcraft; Palo; hand of ifá
+- Class 7: Brief discussion of ori; egungun; possession; witchcraft; Palo; hand of ifá
 
-- Class 8: Initiations and oaths; community responsibitities; obi divination; Orisa chakras; further reading and other resources.
+- Class 8: Initiations and oaths; community responsibilities; obi divination; Orisa chakras; further reading and other resources.
