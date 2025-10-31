@@ -83,8 +83,8 @@ def library():
 
 @student.route('/docs/<id>')
 def get_pdf(id):
-        subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
-        if not subscriptions.data:
+        #subscriptions = stripe.Subscription.list(customer=current_user.stripe_customer_id, status="active")
+        if False:# or not subscriptions.data:
             return render_template("400_generic.html", user=current_user, e="Whoops. This requires a subscription."), 403
         binary_pdf = query("SELECT filecontent FROM library_content WHERE id = %s", (id,))[0]
         if binary_pdf:
