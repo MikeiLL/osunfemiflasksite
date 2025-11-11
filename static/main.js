@@ -187,6 +187,11 @@ on("click", "button.useredit", (e) => {
         INPUT({name: c.dataset.name, type: c.className, style: "background-color: aliceblue;", max: c.dataset.max_grade, min: 0, value: c.innerText})
       ])
     }
+    if (c.dataset.name == "user_level") {
+      return TD([
+        c.innerText
+      ])
+    }
     return TD([
     INPUT({name: c.dataset.name, type: c.className, style: "background-color: aliceblue;", value: c.innerText})
   ])}

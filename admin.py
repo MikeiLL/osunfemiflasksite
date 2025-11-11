@@ -88,7 +88,7 @@ def user_listing():
 @admin.route("/users", methods=["post"])
 def user_update():
     fields, params = [], []
-    for field in ["fullname", "ifaorishaname", "email", "user_level", "grade_level"]:
+    for field in ["fullname", "ifaorishaname", "email", "grade_level"]:
         if field in request.form:
             fields.append(field + " = %s")
             params.append(request.form[field])
