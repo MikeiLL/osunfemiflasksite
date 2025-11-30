@@ -1,24 +1,34 @@
 import psycopg2
 import psycopg2.extras
+from psycopg2 import pool
 import os
 
 import utils
 
 
 DATABASE_URL = os.environ["DATABASE_URL"]
+
+# Create a connection pool
+connection_pool = psycopg2.pool.SimpleConnectionPool(
+    1, 10, DATABASE_URL
+)
 _conn = psycopg2.connect((DATABASE_URL))
 
 def dict_query(query, params=()):
+  _conn = connection_pool.getconn()
   with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
     cur.execute(query, params, )
     if not cur.description is None:
         return cur.fetchall()
+  connection_pool.putconn(_conn)
 
 def query(query, params=()):
+  _conn = connection_pool.getconn()
   with _conn, _conn.cursor() as cur:
     cur.execute(query, params, )
     if not cur.description is None:
         return cur.fetchall()
+  connection_pool.putconn(_conn)
 
 
 def create_user(username, email, password):
