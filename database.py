@@ -16,19 +16,23 @@ _conn = psycopg2.connect((DATABASE_URL))
 
 def dict_query(query, params=()):
   _conn = connection_pool.getconn()
-  with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-    cur.execute(query, params, )
-    if not cur.description is None:
-        return cur.fetchall()
-  connection_pool.putconn(_conn)
+  try:
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute(query, params, )
+        if not cur.description is None:
+            return cur.fetchall()
+  finally:
+    connection_pool.putconn(_conn)
 
 def query(query, params=()):
   _conn = connection_pool.getconn()
-  with _conn, _conn.cursor() as cur:
-    cur.execute(query, params, )
-    if not cur.description is None:
-        return cur.fetchall()
-  connection_pool.putconn(_conn)
+  try:
+    with _conn, _conn.cursor() as cur:
+        cur.execute(query, params, )
+        if not cur.description is None:
+            return cur.fetchall()
+  finally:
+    connection_pool.putconn(_conn)
 
 
 def create_user(username, email, password):
