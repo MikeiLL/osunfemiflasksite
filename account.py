@@ -73,10 +73,10 @@ def create_account_post():
     msg = Message('Confirm Temple Registration at oghtolal.com', recipients=[request.form["email"],"mike@mzoo.org"])
     msg.body = """One more step. Either you or someone else just created an account at oghtolal.com.
 
-To confirm for %s, please visit %s""" % (request.form["fullname"], confirmation_url)
+To confirm for username: %s, please visit %s""" % (request.form["fullname"], confirmation_url)
     msg.html = """<h3>One more step. Either you or someone else just created an account at Osun's Golden Harvest Temple of Love and Light.</h3>
 
-<p>Please <a href='%s' title='activation link'>click this link</a> to confirm your account at %s.</p>""" % (request.form["fullname"], confirmation_url)
+<p>To confirm your account for user: %s, please <a href='%s' title='activation link'>click this link</a>.</p>""" % (request.form["fullname"], confirmation_url)
     mail.send(msg)
     return json.dumps({
         "success": "Thanks for registering. Please check your email (%s) for confirmation link... and click it." % request.form["email"]
